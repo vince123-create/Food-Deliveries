@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>G&T's Delivery — W&J Campus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{--red:#C0392B;--red-light:#E74C3C;--black:#111;--surface:#F8F5F1;--white:#fff;--border:#E8E2D9;}
+    body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--black);}
+
+    nav{background:var(--black);display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:100;}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:2px;}
+    .logo span{color:var(--red-light);}
+    .nav-pill{background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);border-radius:20px;padding:6px 14px;display:flex;align-items:center;gap:6px;}
+    .dot{width:7px;height:7px;background:#4ade80;border-radius:50%;animation:pulse 1.5s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+    .nav-pill span{font-size:12px;color:rgba(255,255,255,0.8);}
+    .nav-pill strong{color:#fff;}
+
+    .hero{background:var(--black);padding:64px 32px 56px;display:flex;gap:48px;align-items:center;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;right:-80px;top:-80px;width:320px;height:320px;background:var(--red);border-radius:50%;opacity:0.07;}
+    .hero-left{flex:1;position:relative;}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);border-radius:6px;padding:7px 14px;margin-bottom:20px;}
+    .hero-tag span{font-size:12px;color:rgba(255,255,255,0.6);}
+    .hero-tag strong{font-size:12px;color:#fff;}
+    h1{font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:0.93;letter-spacing:1px;color:#fff;margin-bottom:18px;}
+    h1 em{color:var(--red-light);font-style:normal;}
+    .hero-sub{font-size:15px;color:rgba(255,255,255,0.55);line-height:1.65;max-width:380px;margin-bottom:30px;}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+    .btn-red{background:var(--red);color:#fff;border:none;padding:13px 26px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;}
+    .btn-outline{background:transparent;color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2);padding:13px 26px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;}
+    .hero-right{display:flex;flex-direction:column;gap:10px;min-width:160px;}
+    .hcard{background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:18px 20px;text-align:center;}
+    .hcard-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--red-light);letter-spacing:1px;line-height:1;}
+    .hcard-lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;}
+
+    .strip{background:var(--red);display:flex;justify-content:space-around;padding:14px 32px;flex-wrap:wrap;gap:8px;}
+    .si{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px;font-weight:500;}
+
+    .sec{padding:56px 32px;}
+    .eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+    h2{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;margin-bottom:36px;}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .step{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:24px;position:relative;}
+    .step-n{font-family:'Bebas Neue',sans-serif;font-size:56px;color:#f0ebe3;position:absolute;top:10px;right:16px;line-height:1;}
+    .ico{width:44px;height:44px;background:#FEF0EE;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+    .step h3{font-size:15px;font-weight:600;margin-bottom:7px;}
+    .step p{font-size:13px;color:#888;line-height:1.55;}
+
+    .hours-sec{background:var(--white);padding:56px 32px;border-top:0.5px solid var(--border);}
+    .hours-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .hday-card{border-radius:14px;border:0.5px solid var(--border);padding:22px;position:relative;overflow:hidden;background:var(--white);}
+    .hday-accent{position:absolute;top:0;left:0;width:4px;height:100%;background:var(--red);}
+    .hday-badge{display:inline-block;background:#FEF0EE;color:var(--red);font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;margin-bottom:10px;text-transform:uppercase;}
+    .hday-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--black);margin-bottom:4px;}
+    .hday-time{font-size:14px;font-weight:600;color:var(--red);margin-bottom:6px;}
+    .hday-note{font-size:12px;color:#999;line-height:1.4;}
+    .ref-box{margin-top:20px;background:#fafafa;border:0.5px solid var(--border);border-radius:12px;padding:20px 24px;}
+    .ref-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:12px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    .ref-item{font-size:13px;}
+    .ref-item strong{display:block;margin-bottom:2px;}
+    .ref-item span{color:#888;}
+
+    .form-sec{background:var(--white);border-top:0.5px solid var(--border);}
+    .form-inner{display:grid;grid-template-columns:1.2fr 1fr;}
+    .form-left{padding:52px 40px;border-right:0.5px solid var(--border);}
+    .form-right{padding:52px 36px;background:var(--black);}
+    .form-grid{display:flex;flex-direction:column;gap:16px;}
+    .fg{display:flex;flex-direction:column;gap:6px;}
+    .fg label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;}
+    .fg input,.fg select,.fg textarea{padding:11px 14px;border-radius:8px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--black);background:var(--surface);outline:none;transition:border 0.2s;width:100%;}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);}
+    .fg textarea{resize:vertical;min-height:72px;}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .loc-stack{display:flex;flex-direction:column;gap:10px;}
+    .pay-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .pay-opt{border:1.5px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:border 0.2s;background:var(--white);}
+    .pay-opt.active,.pay-opt:hover{border-color:var(--red);}
+    .pay-icon{font-size:20px;margin-bottom:4px;}
+    .pay-name{font-size:12px;font-weight:600;color:var(--black);}
+    .submit{background:var(--red);color:#fff;border:none;width:100%;padding:14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;}
+    .submit:hover{background:#a93226;}
+    .hidden{display:none;}
+
+    .panel-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:1px;margin-bottom:24px;}
+    .info-block{margin-bottom:24px;}
+    .ib-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px;}
+    .ib-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid rgba(255,255,255,0.07);font-size:13px;}
+    .ib-row:last-child{border:none;}
+    .ib-row span:first-child{color:rgba(255,255,255,0.5);}
+    .ib-row span:last-child{color:#fff;font-weight:500;}
+    .fee-note{background:rgba(192,57,43,0.15);border:0.5px solid rgba(192,57,43,0.3);border-radius:10px;padding:14px 16px;}
+    .fee-note p{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;}
+    .fee-note strong{color:var(--red-light);}
+    .contact-links{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+    .clink{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;}
+    .clink span{font-size:13px;color:rgba(255,255,255,0.8);}
+
+    footer{background:#0a0a0a;padding:22px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+    footer .logo{font-size:18px;}
+    footer p{font-size:12px;color:rgba(255,255,255,0.25);}
+
+    @media(max-width:768px){
+      .hero{flex-direction:column;padding:40px 20px;}
+      h1{font-size:52px;}
+      .hero-right{flex-direction:row;flex-wrap:wrap;}
+      .steps,.hours-grid,.ref-grid{grid-template-columns:1fr;}
+      .form-inner{grid-template-columns:1fr;}
+      .form-left{padding:32px 20px;}
+      .form-right{padding:32px 20px;}
+      .frow{grid-template-columns:1fr;}
+      .strip{justify-content:flex-start;}
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">G<span>&</span>T's <span style="color:rgba(255,255,255,0.35);font-size:18px;">✕</span> Delivery</div>
+    <div class="nav-pill"><div class="dot"></div><span>Delivery <strong>available now</strong></span></div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag"><span>W&J Campus &nbsp;·&nbsp;</span><strong>Dorm delivery</strong></div>
+      <h1>G&T's<br><em>Delivered</em><br>To You.</h1>
+      <p class="hero-sub">Already ordered on the G&T's app? We'll bring it straight to your dorm or building. No more braving the cold for your food.</p>
+      <div class="hero-actions">
+        <a href="#order" class="btn-red">Request Delivery</a>
+        <a href="#how" class="btn-outline">How it works</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hcard"><div class="hcard-num">10</div><div class="hcard-lbl">min avg delivery</div></div>
+      <div class="hcard"><div class="hcard-num">100%</div><div class="hcard-lbl">W&J campus coverage</div></div>
+      <div class="hcard"><div class="hcard-num">3</div><div class="hcard-lbl">payment methods</div></div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="si">🛵 Fixed delivery teamd</div>
+    <div class="si">📲 Order on G&T's app first</div>
+    <div class="si">📍 All buildings covered</div>
+    <div class="si">💸 Venmo · PayPal · Cash</div>
+  </div>
+
+  <section class="sec" id="how">
+    <div class="eyebrow">How it works</div>
+    <h2>3 Steps to Your Door</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></div>
+        <h3>Order on the G&T's app</h3>
+        <p>Place your food order normally through the official G&T's Grill app and note your order number.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Request delivery here</h3>
+        <p>Fill out the form below with your order number, building, room, and preferred payment method.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+        <h3>We bring it to you</h3>
+        <p>Our runner picks up your order and delivers it right to your door. Pay on delivery or in advance.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hours-sec" id="hours">
+    <div class="eyebrow">Availability</div>
+    <h2>Delivery Hours</h2>
+    <div class="hours-grid">
+      <div class="hday-card">
+        <div class="hday-accent"></div>
+        <div class="hday-badge">Available</div>
+        <div class="hday-name">Mon · Wed · Fri</div>
+        <div class="hday-time">11:00am – Midnight</div>
+        <div class="hday-note">Classes end at 11am — delivering all day until G&T's closes.</div>
+      </div>
+      <div class="hday-card">
+        <div class="hday-accent"></div>
+        <div class="hday-badge">Available</div>
+        <div class="hday-name">Tue · Thu</div>
+        <div class="hday-time">5:30pm – Midnight</div>
+        <div class="hday-note">Classes end at 5:30pm — delivering evenings until G&T's closes.</div>
+      </div>
+      <div class="hday-card">
+        <div class="hday-accent"></div>
+        <div class="hday-badge">Available</div>
+        <div class="hday-name">Sat · Sun</div>
+        <div class="hday-time">11:00am – 11:00pm</div>
+        <div class="hday-note">Available all day on weekends until G&T's closes.</div>
+      </div>
+    </div>
+    <div class="ref-box">
+      <div class="ref-label">G&T's Grill official hours (for reference)</div>
+      <div class="ref-grid">
+        <div class="ref-item"><strong>Mon – Thu</strong><span>11am – Midnight</span></div>
+        <div class="ref-item"><strong>Friday</strong><span>11am – 11pm</span></div>
+        <div class="ref-item"><strong>Saturday</strong><span>4pm – 11pm</span></div>
+        <div class="ref-item"><strong>Sunday</strong><span>4pm – Midnight</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-sec" id="order">
+    <div class="form-inner">
+      <div class="form-left">
+        <div class="eyebrow">Delivery request</div>
+        <h2 style="margin-bottom:28px;">Where should we bring it?</h2>
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="form-grid">
+          <div class="frow">
+            <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Alex" required /></div>
+            <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required /></div>
+          </div>
+          <div class="fg"><label>W&J Email</label><input type="email" name="email" placeholder="asmith@washjeff.edu" required /></div>
+          <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="(724) 555-0100" required /></div>
+
+          <!-- LOCATION -->
+          <div class="fg">
+            <label>Delivery Location</label>
+            <div class="loc-stack">
+              <select name="location_type" id="loc-type" onchange="updateLocation()" required>
+                <option value="">Select type...</option>
+                <option value="dorm">Dorm</option>
+                <option value="academic">Academic building</option>
+                <option value="greek">Fraternity / Sorority</option>
+                <option value="other">Other location</option>
+              </select>
+
+              <!-- Dorm dropdown -->
+              <select name="dorm" id="sel-dorm" class="hidden">
+                <option value="">Select dorm...</option>
+                <option>1970 Hall</option>
+                <option>Adams Hall</option>
+                <option>Alexander Hall</option>
+                <option>Bica-Ross Hall</option>
+                <option>Buchanan Hall</option>
+                <option>Cleveland Hall</option>
+                <option>Cooper Hall</option>
+                <option>Fillmore Hall</option>
+                <option>Jefferson Hall</option>
+                <option>Marshall Hall</option>
+                <option>Mellon Hall</option>
+                <option>Monroe Hall</option>
+                <option>New Residence Hall</option>
+                <option>Penn House</option>
+                <option>Reisenman Hall</option>
+                <option>Upperclass Hall</option>
+                <option>Wade Hall</option>
+                <option>Washington Hall</option>
+              </select>
+
+              <!-- Academic dropdown -->
+              <select name="academic_building" id="sel-academic" class="hidden">
+                <option value="">Select building...</option>
+                <option>Burnett Center</option>
+                <option>Clark Family Library</option>
+                <option>Dieter-Porter</option>
+                <option>The Hub</option>
+                <option>Olin</option>
+                <option>Old Main</option>
+                <option>Swanson</option>
+                <option>Thompson Hall</option>
+              </select>
+
+              <!-- Greek life text input -->
+              <div id="sel-greek" class="hidden">
+                <input type="text" name="greek_house" placeholder="e.g. Sigma Chi, Alpha Phi, Kappa Kappa Gamma..." />
+              </div>
+
+              <!-- Other dropdown -->
+              <select name="other_location" id="sel-other" class="hidden">
+                <option value="">Select location...</option>
+                <option>Rossin Campus Center</option>
+                <option>Other on-campus location</option>
+              </select>
+
+              <input type="text" name="room" id="room-input" placeholder="Room / unit number (if applicable)" />
+            </div>
+          </div>
+
+          <div class="fg"><label>G&T's Order Number</label><input type="text" name="order_number" placeholder="e.g. #GT-4821" required /></div>
+
+          <div class="fg">
+            <label>Payment Method</label>
+            <div class="pay-opts">
+              <div class="pay-opt active" onclick="selectPay(this,'Venmo')"><div class="pay-icon">💸</div><div class="pay-name">Venmo</div></div>
+              <div class="pay-opt" onclick="selectPay(this,'PayPal')"><div class="pay-icon">🅿️</div><div class="pay-name">PayPal</div></div>
+              <div class="pay-opt" onclick="selectPay(this,'Cash')"><div class="pay-icon">💵</div><div class="pay-name">Cash</div></div>
+            </div>
+            <input type="hidden" name="payment_method" id="pay-input" value="Venmo" />
+          </div>
+
+          <div class="fg"><label>Notes for the runner</label><textarea name="notes" placeholder="Leave at door, call when outside, access code..."></textarea></div>
+          <button type="submit" class="submit">Request My Delivery →</button>
+        </form>
+      </div>
+
+      <div class="form-right">
+        <div class="panel-title">Delivery Info</div>
+        <div class="info-block">
+          <div class="ib-label">My delivery hours</div>
+          <div class="ib-row"><span>Mon / Wed / Fri</span><span>11am – Midnight</span></div>
+          <div class="ib-row"><span>Tue / Thu</span><span>5:30pm – Midnight</span></div>
+          <div class="ib-row"><span>Sat / Sun</span><span>11am – 11pm</span></div>
+        </div>
+        <div class="info-block">
+          <div class="ib-label">Delivery Fee</div>
+          <div class="fee-note"><p>A small delivery fee applies per order. Have <strong>$5 ready</strong> for the runner.</p></div>
+        </div>
+        <div class="info-block">
+          <div class="ib-label">Coverage</div>
+          <div class="ib-row"><span>All W&J dorms</span><span>✓</span></div>
+          <div class="ib-row"><span>Academic buildings</span><span>✓</span></div>
+          <div class="ib-row"><span>Frats &amp; sororities</span><span>✓</span></div>
+          <div class="ib-row"><span>Rossin Campus Center</span><span>✓</span></div>
+          <div class="ib-row"><span>Off campus</span><span>✗</span></div>
+        </div>
+        <div class="info-block">
+          <div class="ib-label">Payment handles</div>
+          <div class="contact-links">
+            <div class="clink"><span>💸 &nbsp;Venmo: coming soon</span></div>
+            <div class="clink"><span>🅿️ &nbsp;PayPal: coming soon</span></div>
+            <div class="clink"><span>📷 &nbsp;Instagram: coming soon</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo">G<span>&</span>T's Delivery</div>
+    <p>Washington & Jefferson College · Not affiliated with official W&J Dining Services</p>
+  </footer>
+
+  <script>
+    function updateLocation(){
+      const type=document.getElementById('loc-type').value;
+      const ids=['sel-dorm','sel-academic','sel-greek','sel-other'];
+      ids.forEach(id=>document.getElementById(id).classList.add('hidden'));
+      if(type==='dorm') document.getElementById('sel-dorm').classList.remove('hidden');
+      else if(type==='academic') document.getElementById('sel-academic').classList.remove('hidden');
+      else if(type==='greek') document.getElementById('sel-greek').classList.remove('hidden');
+      else if(type==='other') document.getElementById('sel-other').classList.remove('hidden');
+    }
+    function selectPay(el,method){
+      document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('pay-input').value=method;
+    }
+  </script>
+</body>
+</html>
