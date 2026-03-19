@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Service — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#1a7a4a;--green-light:#e6f5ee;--green-border:#b2dfc7;--red:#c0392b;--red-light:#fdf0ee;--gray-50:#f9f9f8;--gray-100:#f0efed;--gray-200:#e0dedd;--gray-400:#9e9c9a;--gray-700:#3d3b39;--gray-900:#1a1917;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--radius:12px;--radius-sm:8px}
+body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900);min-height:100vh;padding:2rem 1rem}
+.wrap{max-width:480px;margin:0 auto}
+h1{font-size:20px;font-weight:600;margin-bottom:4px}
+.subtitle{font-size:13px;color:var(--gray-400);margin-bottom:1.5rem;font-family:var(--mono)}
+
+/* login */
+#login-screen{display:flex;flex-direction:column;justify-content:center;min-height:80vh}
+.login-card{background:white;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:2rem}
+.login-card h2{font-size:16px;font-weight:600;margin-bottom:1.5rem}
+.field{margin-bottom:1rem}
+.field label{font-size:12px;color:var(--gray-400);display:block;margin-bottom:6px;font-family:var(--mono)}
+.field input{width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:var(--font);outline:none;transition:border-color 0.15s}
+.field input:focus{border-color:var(--green)}
+.btn{width:100%;padding:11px;background:var(--green);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;font-family:var(--font);cursor:pointer;transition:opacity 0.15s}
+.btn:hover{opacity:0.9}
+.err{font-size:13px;color:var(--red);margin-top:8px;display:none}
+
+/* main */
+#main-screen{display:none}
+.badge{border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:12px;margin-bottom:1rem;border:1.5px solid transparent;transition:all 0.3s}
+.badge.available{background:var(--green-light);border-color:var(--green-border)}
+.badge.unavailable{background:var(--red-light);border-color:#f0c4be}
+.pulse{width:10px;height:10px;border-radius:50%;flex-shrink:0;position:relative}
+.pulse::after{content:'';position:absolute;inset:0;border-radius:50%;animation:ripple 1.8s ease-out infinite}
+.badge.available .pulse,.badge.available .pulse::after{background:#22c063}
+.badge.unavailable .pulse,.badge.unavailable .pulse::after{background:var(--red);animation:none}
+@keyframes ripple{0%{transform:scale(1);opacity:0.7}100%{transform:scale(2.8);opacity:0}}
+.badge-info{flex:1}
+.badge-title{font-size:15px;font-weight:600}
+.badge.available .badge-title{color:var(--green)}
+.badge.unavailable .badge-title{color:var(--red)}
+.badge-sub{font-size:12px;color:var(--gray-400);font-family:var(--mono);margin-top:2px}
+.badge-time{font-size:11px;font-family:var(--mono);color:var(--gray-400);background:white;border:1px solid var(--gray-200);border-radius:6px;padding:4px 8px}
+
+.card{background:white;border:1.5px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-400)}
+.clock{font-family:var(--mono);font-size:12px;color:var(--gray-400)}
+
+.day-row{display:flex;align-items:center;padding:10px 16px;gap:10px;border-bottom:1px solid var(--gray-100);transition:background 0.1s}
+.day-row:last-child{border-bottom:none}
+.day-row:hover{background:var(--gray-50)}
+.day-row.today-row{background:#fafff9}
+.day-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;visibility:hidden}
+.today-row .day-dot{visibility:visible}
+.day-name{font-size:13px;font-weight:500;width:30px;flex-shrink:0}
+.today-row .day-name{color:var(--green);font-weight:600}
+.tog-wrap{display:flex;align-items:center}
+.tog-inp{display:none}
+.tog-track{width:32px;height:18px;border-radius:20px;background:var(--gray-200);position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.tog-inp:checked+.tog-track{background:var(--green)}
+.tog-track::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:white;top:3px;left:3px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.tog-inp:checked+.tog-track::after{transform:translateX(14px)}
+.times{display:flex;align-items:center;gap:5px;flex:1;justify-content:flex-end}
+.times input[type=time]{font-family:var(--mono);font-size:12px;padding:3px 7px;border:1px solid var(--gray-200);border-radius:6px;background:var(--gray-50);color:var(--gray-900);outline:none;transition:border-color 0.15s;width:85px}
+.times input[type=time]:focus{border-color:var(--green)}
+.sep{font-size:11px;color:var(--gray-400);font-family:var(--mono)}
+.closed-lbl{font-size:11px;font-family:var(--mono);color:var(--gray-400);margin-left:auto}
+.day-row.closed .times{display:none}
+.day-row:not(.closed) .closed-lbl{display:none}
+
+.save-btn{width:100%;padding:12px;background:var(--green);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;font-family:var(--font);cursor:pointer;transition:opacity 0.15s;margin-bottom:1rem}
+.save-btn:hover{opacity:0.9}
+.save-btn:disabled{opacity:0.5;cursor:not-allowed}
+.save-msg{text-align:center;font-size:13px;font-family:var(--mono);color:var(--green);margin-bottom:1rem;display:none}
+
+.hint{background:var(--gray-100);border-radius:var(--radius-sm);padding:10px 14px;font-size:11.5px;color:var(--gray-400);font-family:var(--mono)}
+.hint b{color:var(--gray-700);font-weight:500}
+
+.logout{font-size:12px;color:var(--gray-400);background:none;border:none;cursor:pointer;text-decoration:underline;display:block;margin:1rem auto 0;font-family:var(--font)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="login-screen">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="pwd-input" placeholder="Enter your admin password" onkeydown="if(event.key==='Enter')login()">
+      </div>
+      <button class="btn" onclick="login()">Sign in</button>
+      <p class="err" id="login-err">Wrong password, try again.</p>
+    </div>
+  </div>
+
+  <div id="main-screen">
+    <h1>Delivery Service</h1>
+    <p class="subtitle" id="clock-top">--:-- --</p>
+
+    <div class="badge" id="badge">
+      <div class="pulse" id="pulse"></div>
+      <div class="badge-info">
+        <div class="badge-title" id="badge-title">—</div>
+        <div class="badge-sub" id="badge-sub">—</div>
+      </div>
+      <div class="badge-time" id="badge-day">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Delivery hours</span>
+        <span class="clock" id="clock2">—</span>
+      </div>
+      <div id="rows"></div>
+    </div>
+
+    <button class="save-btn" id="save-btn" onclick="saveSchedule()">Save &amp; notify Discord</button>
+    <p class="save-msg" id="save-msg">Saved! Discord notified.</p>
+
+    <div class="hint">
+      Slash commands in Discord:<br>
+      <b>/status</b> — check if open now<br>
+      <b>/schedule</b> — see full week<br>
+      <b>/sethours mon 08:00 18:00</b> — update a day<br>
+      <b>/close sun</b> — mark a day closed
+    </div>
+
+    <button class="logout" onclick="logout()">Sign out</button>
+  </div>
+
+</div>
+<script>
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let schedule = [];
+let pwd = '';
+
+function login() {
+  pwd = document.getElementById('pwd-input').value;
+  fetch('/api/schedule', { headers: { 'x-admin-password': pwd } })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(data => {
+      schedule = data;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main-screen').style.display = 'block';
+      buildRows();
+      updateBadge();
+      setInterval(updateBadge, 30000);
+    })
+    .catch(() => {
+      document.getElementById('login-err').style.display = 'block';
+    });
+}
+
+function logout() {
+  pwd = '';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('pwd-input').value = '';
+}
+
+function toMins(t) { const [h,m]=t.split(':').map(Number); return h*60+m; }
+function fmt12(t) {
+  const [h,m]=t.split(':').map(Number);
+  const ap=h>=12?'PM':'AM'; const h12=h%12||12;
+  return m===0?`${h12}:00 ${ap}`:`${h12}:${String(m).padStart(2,'0')} ${ap}`;
+}
+function fmtClock(d) {
+  let h=d.getHours(),m=d.getMinutes();
+  const ap=h>=12?'PM':'AM'; h=h%12||12;
+  return `${h}:${String(m).padStart(2,'0')} ${ap}`;
+}
+
+function updateBadge() {
+  const now = new Date();
+  const day = now.getDay();
+  const mins = now.getHours()*60+now.getMinutes();
+  const s = schedule[day];
+  const t = fmtClock(now);
+  document.getElementById('clock-top').textContent = t;
+  document.getElementById('clock2').textContent = t;
+  document.getElementById('badge-day').textContent = DAYS[day];
+  const open = s && s.open && mins >= toMins(s.start) && mins < toMins(s.end);
+  const badge = document.getElementById('badge');
+  badge.className = 'badge ' + (open ? 'available' : 'unavailable');
+  document.getElementById('badge-title').textContent = open ? 'Delivery available now' : 'Not available right now';
+  if (open) {
+    document.getElementById('badge-sub').textContent = `Open until ${fmt12(s.end)}`;
+  } else {
+    let found = '';
+    for (let i=1;i<=7;i++) { const di=(day+i)%7; if(schedule[di]&&schedule[di].open){ const lbl=i===1?'Tomorrow':DAYS[di]; found=`Opens ${lbl} at ${fmt12(schedule[di].start)}`; break; } }
+    document.getElementById('badge-sub').textContent = found || 'No upcoming hours';
+  }
+}
+
+function buildRows() {
+  const today = new Date().getDay();
+  const container = document.getElementById('rows');
+  container.innerHTML = '';
+  schedule.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.className = 'day-row' + (i===today?' today-row':'') + (!s.open?' closed':'');
+    row.id = 'row'+i;
+
+    const dot = document.createElement('span'); dot.className='day-dot';
+    const name = document.createElement('span'); name.className='day-name'; name.textContent=DAYS[i];
+
+    const togWrap = document.createElement('label'); togWrap.className='tog-wrap';
+    const chk = document.createElement('input'); chk.type='checkbox'; chk.className='tog-inp'; chk.checked=s.open;
+    const track = document.createElement('span'); track.className='tog-track';
+    chk.addEventListener('change', () => { schedule[i].open=chk.checked; row.classList.toggle('closed',!chk.checked); timesDiv.style.display=chk.checked?'flex':'none'; closedLbl.style.display=chk.checked?'none':'block'; updateBadge(); });
+    togWrap.appendChild(chk); togWrap.appendChild(track);
+
+    const timesDiv = document.createElement('div'); timesDiv.className='times'; timesDiv.style.display=s.open?'flex':'none';
+    const startIn = document.createElement('input'); startIn.type='time'; startIn.value=s.start; startIn.addEventListener('change',()=>{ schedule[i].start=startIn.value; updateBadge(); });
+    const sep = document.createElement('span'); sep.className='sep'; sep.textContent='–';
+    const endIn = document.createElement('input'); endIn.type='time'; endIn.value=s.end; endIn.addEventListener('change',()=>{ schedule[i].end=endIn.value; updateBadge(); });
+    timesDiv.appendChild(startIn); timesDiv.appendChild(sep); timesDiv.appendChild(endIn);
+
+    const closedLbl = document.createElement('span'); closedLbl.className='closed-lbl'; closedLbl.textContent='Closed'; closedLbl.style.display=s.open?'none':'block';
+
+    row.appendChild(dot); row.appendChild(name); row.appendChild(togWrap); row.appendChild(timesDiv); row.appendChild(closedLbl);
+    container.appendChild(row);
+  });
+}
+
+function saveSchedule() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  fetch('/api/schedule', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'x-admin-password': pwd },
+    body: JSON.stringify(schedule)
+  }).then(r => r.json()).then(() => {
+    btn.disabled = false;
+    btn.textContent = 'Save & notify Discord';
+    const msg = document.getElementById('save-msg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display='none', 3000);
+  }).catch(() => {
+    btn.disabled = false;
+    btn.textContent = 'Save & notify Discord';
+    alert('Error saving. Check your connection.');
+  });
+}
+</script>
+</body>
+</html>
