@@ -146,9 +146,9 @@
     .sauce-card:hover{border-color:rgba(192,57,43,0.5);transform:translateY(-3px);box-shadow:0 8px 24px rgba(192,57,43,0.15);}
     .sauce-card:hover::before,.sauce-card.selected::before{opacity:1;}
     .sauce-card.selected{border-color:var(--red);background:#1e1010;}
-    .sauce-emoji{font-size:36px;margin-bottom:8px;display:block;transition:transform 0.3s;pointer-events:none;}
-    .sauce-card:hover .sauce-emoji{transform:scale(1.18) rotate(-5deg);}
-    .sauce-card.selected .sauce-emoji{transform:scale(1.1);}
+    .sauce-emoji{width:80px;height:80px;margin:0 auto 8px;display:block;object-fit:contain;transition:transform 0.3s;pointer-events:none;}
+    .sauce-card:hover .sauce-emoji{transform:scale(1.12) rotate(-3deg);}
+    .sauce-card.selected .sauce-emoji{transform:scale(1.08);}
     .sauce-name{font-size:12px;font-weight:600;color:#f0ebe8;margin-bottom:10px;pointer-events:none;}
     .sauce-qty{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:4px;height:32px;opacity:0;transition:opacity 0.2s;}
     .sauce-card.selected .sauce-qty{opacity:1;}
@@ -181,7 +181,6 @@
     .sdp-name{font-size:13px;font-weight:600;color:#f0ebe8;flex:1;}
     .sdp-clear{background:none;border:none;color:#6b6060;cursor:pointer;font-size:18px;padding:0;line-height:1;transition:color 0.2s;}
     .sdp-clear:hover{color:#e74c3c;}
-    /* Ice */
     .ice-row{display:flex;gap:8px;}
     .ice-opt{flex:1;padding:9px 8px;border-radius:8px;border:1.5px solid #2a2020;background:transparent;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;}
     .ice-opt:hover{border-color:#9c8f8f;color:#9c8f8f;}
@@ -366,7 +365,7 @@
             <div class="ib-label">Payment handles</div>
             <div class="contact-links">
               <a href="https://venmo.com/Vincent-Bertacchi-1" target="_blank" class="clink"><span>💸 &nbsp;Venmo: @Vincent-Bertacchi-1</span></a>
-              <a href="https://paypal.me/VincentBertacchi" target="_blank" class="clink"><span>🅿️ &nbsp;PayPal: paypal.me/VincentBertacchi</span></a> 
+              <a href="https://paypal.me/VincentBertacchi" target="_blank" class="clink"><span>🅿️ &nbsp;PayPal: paypal.me/VincentBertacchi</span></a>
             </div>
           </div>
         </div>
@@ -421,12 +420,12 @@
 
   /* ── DATA ── */
   const SAUCES=[
-    {id:'ketchup',name:'Ketchup',emoji:'🍅'},
-    {id:'mayo',name:'Mayonnaise',emoji:'🥚'},
-    {id:'ranch',name:'Ranch',emoji:'🌿'},
-    {id:'yellow_mustard',name:'Yellow Mustard',emoji:'💛'},
-    {id:'honey_mustard',name:'Honey Mustard',emoji:'🍯'},
-    {id:'bbq',name:'BBQ Sauce',emoji:'🔥'},
+    {id:'ketchup',name:'Ketchup',img:'ketchup.png'},
+    {id:'mayo',name:'Mayonnaise',img:'mayo.png'},
+    {id:'ranch',name:'Ranch',img:'ranch.png'},
+    {id:'yellow_mustard',name:'Yellow Mustard',img:'yellow_mustard.png'},
+    {id:'honey_mustard',name:'Honey Mustard',img:'honey_mustard.png'},
+    {id:'bbq',name:'BBQ Sauce',img:'bbq.png'},
   ];
   const DRINKS={
     'Coca-Cola':[
@@ -486,7 +485,7 @@
         ${SAUCES.map(s=>`
           <div class="sauce-card ${sauceSelections[s.id]?'selected':''}" id="sc-${s.id}" data-sauce-id="${s.id}">
             <div class="sauce-check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="2"/></svg></div>
-            <span class="sauce-emoji">${s.emoji}</span>
+            <img class="sauce-emoji" src="${s.img}" alt="${s.name}" />
             <div class="sauce-name">${s.name}</div>
             <div class="sauce-qty" id="sq-${s.id}">
               <button class="qty-btn" data-action="dec" data-id="${s.id}">−</button>
@@ -562,7 +561,7 @@
   function renderConfirmStep(){
     const sauceEntries=Object.entries(sauceSelections);
     const sauceHtml=sauceEntries.length
-      ?sauceEntries.map(([id,qty])=>{const s=SAUCES.find(x=>x.id===id);return`<div class="confirm-row"><span>${s.emoji} ${s.name}</span><span>×${qty} packet${qty>1?'s':''}</span></div>`;}).join('')
+      ?sauceEntries.map(([id,qty])=>{const s=SAUCES.find(x=>x.id===id);return`<div class="confirm-row"><span style="display:flex;align-items:center;gap:8px"><img src="${s.img}" style="width:22px;height:22px;object-fit:contain;border-radius:3px">${s.name}</span><span>x${qty} packet${qty>1?'s':''}</span></div>`;}).join('')
       :'<p class="confirm-empty">No sauces</p>';
     const iceLabel={'ice':'🧊 Ice','light-ice':'🧊 Light Ice','no-ice':'🚫 No Ice'}[iceChoice];
     const drinkHtml=drinkSelection
@@ -586,7 +585,7 @@
   const SHEETDB_URL='https://sheetdb.io/api/v1/jjmci5czl8hn3';
 
   function buildExtrasString(){
-    const sauces=Object.entries(sauceSelections).map(([id,qty])=>{const s=SAUCES.find(x=>x.id===id);return`${s.name} ×${qty}`;}).join(', ')||'None';
+    const sauces=Object.entries(sauceSelections).map(([id,qty])=>{const s=SAUCES.find(x=>x.id===id);return`${s.name} x${qty}`;}).join(', ')||'None';
     const iceLabel={'ice':'Ice','light-ice':'Light Ice','no-ice':'No Ice'}[iceChoice];
     const drink=drinkSelection?`${drinkSelection.name} (${iceLabel})`:'None';
     return{sauces,drink};
