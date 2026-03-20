@@ -323,7 +323,7 @@
     const p2=fetch(DISCORD_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:'🛵 **NEW DELIVERY ORDER!**',embeds:[{color:0xC0392B,title:'Order from '+data.get('first_name')+' '+data.get('last_name'),fields:[{name:'🆔 Order ID',value:orderId,inline:true},{name:'📦 G&T\'s Order #',value:data.get('order_number')||'—',inline:true},{name:'💳 Payment',value:data.get('payment_method')||'—',inline:true},{name:'📍 Deliver To',value:building,inline:false},{name:contactLabel,value:contactValue,inline:true},{name:'📝 Notes',value:data.get('notes')||'None',inline:false}],footer:{text:'Submitted at '+now}}]})});
 
     // 3️⃣ Google Sheets via SheetDB — feeds the dashboard (skipped until URL is set)
-    const p3=SHEETDB_URL!=='PASTE_YOUR_SHEETDB_URL_HERE'
+    const p3=SHEETDB_URL!=='https://docs.google.com/spreadsheets/d/1DCJZjEFsJYsjrd69W2hsFSXQ-dmr8wbNljurDZ84wqw/edit#gid=0'
       ?fetch(SHEETDB_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:{date:new Date().toISOString(),order_id:orderId,first_name:data.get('first_name')||'',last_name:data.get('last_name')||'',contact:contactValue,location:building,order_number:data.get('order_number')||'',payment_method:data.get('payment_method')||'',notes:data.get('notes')||'',fee:5}})})
       :Promise.resolve();
 
