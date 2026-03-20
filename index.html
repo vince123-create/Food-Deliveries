@@ -154,9 +154,9 @@
     .sauce-card:hover .sauce-emoji{transform:scale(1.18) rotate(-5deg);}
     .sauce-card.selected .sauce-emoji{transform:scale(1.1);}
     .sauce-name{font-size:12px;font-weight:600;color:#f0ebe8;margin-bottom:10px;}
-    .sauce-qty{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:4px;height:32px;opacity:0;transition:opacity 0.2s;pointer-events:none;}
-    .sauce-card.selected .sauce-qty{opacity:1;pointer-events:none;/* parent handles, buttons override */}
-    .qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid #3a2020;background:#2a2020;color:#f0ebe8;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.15s;flex-shrink:0;pointer-events:all;-webkit-user-select:none;user-select:none;}
+    .sauce-qty{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:4px;height:32px;opacity:0;transition:opacity 0.2s;}
+    .sauce-card.selected .sauce-qty{opacity:1;}
+    .qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid #3a2020;background:#2a2020;color:#f0ebe8;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.15s;flex-shrink:0;-webkit-user-select:none;user-select:none;position:relative;z-index:10;}
     .qty-btn:hover{background:var(--red);border-color:var(--red);}
     .qty-val{font-size:14px;font-weight:700;color:#fff;min-width:18px;text-align:center;}
     .sauce-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;}
@@ -306,7 +306,7 @@
                 <button type="button" class="ct-btn active" onclick="switchContact('email')">📧 Email</button>
                 <button type="button" class="ct-btn" onclick="switchContact('phone')">📱 Phone</button>
               </div>
-              <div id="contact-email"><input type="email" name="email" id="input-email" placeholder="asmith@washjeff.edu" required /></div>
+              <div id="contact-email"><input type="email" name="email" id="input-email" placeholder="GeorgeWashington@washjeff.edu" required /></div>
               <div id="contact-phone" class="hidden"><input type="tel" name="phone" id="input-phone" placeholder="(724) 555-0100" disabled /></div>
             </div>
             <div class="fg">
@@ -571,19 +571,30 @@
         `).join('')}
       </div>`;
 
-    // Single delegated listener on the grid — avoids event bubbling conflicts
-    document.getElementById('sauces-grid').addEventListener('click', function(e) {
-      const btn = e.target.closest('[data-action]');
-      if (btn) {
-        e.stopPropagation();
+    const grid = document.getElementById('sauces-grid');
+
+    // Qty buttons: use mousedown so they fire BEFORE the card's click
+    grid.querySelectorAll('.qty-btn').forEach(function(btn) {
+      btn.addEventListener('mousedown', function(e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
         const id = btn.dataset.id;
+        if (!sauceSelections[id]) return;
         const delta = btn.dataset.action === 'inc' ? 1 : -1;
-        sauceSelections[id] = Math.min(3, Math.max(1, (sauceSelections[id] || 1) + delta));
+        sauceSelections[id] = Math.min(3, Math.max(1, sauceSelections[id] + delta));
         document.getElementById('qv-' + id).textContent = sauceSelections[id];
-        return;
-      }
-      const card = e.target.closest('.sauce-card');
-      if (card) {
+      });
+      // Also block the click from reaching the card
+      btn.addEventListener('click', function(e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      });
+    });
+
+    // Card toggle: only fires if NOT clicking a qty button
+    grid.querySelectorAll('.sauce-card').forEach(function(card) {
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.qty-btn')) return;
         const id = card.dataset.sauceId;
         if (sauceSelections[id]) {
           delete sauceSelections[id];
@@ -593,7 +604,7 @@
           card.classList.add('selected');
           document.getElementById('qv-' + id).textContent = 1;
         }
-      }
+      });
     });
   }
 
