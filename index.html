@@ -109,6 +109,106 @@
     footer{background:#0a0a0a;padding:22px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
     footer .logo{font-size:18px;}
     footer p{font-size:12px;color:rgba(255,255,255,0.25);}
+
+    /* ═══════════════════════════════════════════
+       SAUCE & DRINK POPUP MODAL
+    ═══════════════════════════════════════════ */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+    .modal-backdrop.show{opacity:1;pointer-events:all;}
+    .modal{background:#111;border:1px solid #2a2020;border-radius:20px;width:100%;max-width:720px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(24px) scale(0.97);transition:transform 0.35s cubic-bezier(.34,1.56,.64,1);}
+    .modal-backdrop.show .modal{transform:translateY(0) scale(1);}
+    .modal-header{padding:22px 28px 18px;border-bottom:1px solid #2a2020;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+    .modal-steps{display:flex;gap:8px;align-items:center;}
+    .mstep{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;transition:all 0.3s;}
+    .mstep.done{background:var(--red);color:#fff;}
+    .mstep.active{background:#fff;color:#111;}
+    .mstep.upcoming{background:#2a2020;color:#6b6060;}
+    .mstep-line{width:28px;height:2px;background:#2a2020;border-radius:1px;}
+    .modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;letter-spacing:1px;}
+    .modal-close{width:32px;height:32px;border-radius:8px;background:#2a2020;border:none;cursor:pointer;color:#9c8f8f;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;transition:background 0.2s;}
+    .modal-close:hover{background:#3a2a2a;color:#fff;}
+    .modal-body{padding:24px 28px;overflow-y:auto;flex:1;}
+    .modal-footer{padding:16px 28px;border-top:1px solid #2a2020;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+    .modal-skip{background:transparent;border:1px solid #2a2020;color:#6b6060;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+    .modal-skip:hover{border-color:#9c8f8f;color:#9c8f8f;}
+    .modal-next{background:var(--red);border:none;color:#fff;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;gap:6px;}
+    .modal-next:hover{background:#a93226;}
+    .modal-next:disabled{background:#3a2020;color:#6b6060;cursor:not-allowed;}
+
+    /* Step labels */
+    .step-label{font-size:12px;color:#6b6060;margin-bottom:20px;}
+    .step-label strong{color:#9c8f8f;}
+
+    /* ── SAUCE STEP ── */
+    .sauces-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .sauce-card{border:1.5px solid #2a2020;border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;background:#171414;overflow:hidden;}
+    .sauce-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(192,57,43,0.18),transparent 70%);opacity:0;transition:opacity 0.3s;}
+    .sauce-card:hover{border-color:rgba(192,57,43,0.5);transform:translateY(-3px);box-shadow:0 8px 24px rgba(192,57,43,0.15);}
+    .sauce-card:hover::before{opacity:1;}
+    .sauce-card.selected{border-color:var(--red);background:#1e1010;}
+    .sauce-card.selected::before{opacity:1;}
+    .sauce-emoji{font-size:36px;margin-bottom:8px;display:block;transition:transform 0.3s;}
+    .sauce-card:hover .sauce-emoji{transform:scale(1.18) rotate(-5deg);}
+    .sauce-card.selected .sauce-emoji{transform:scale(1.1);}
+    .sauce-name{font-size:12px;font-weight:600;color:#f0ebe8;margin-bottom:10px;}
+    .sauce-qty{display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity 0.2s;pointer-events:none;}
+    .sauce-card.selected .sauce-qty{opacity:1;pointer-events:all;}
+    .qty-btn{width:24px;height:24px;border-radius:50%;border:1px solid #3a2020;background:#2a2020;color:#f0ebe8;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.15s;flex-shrink:0;}
+    .qty-btn:hover{background:var(--red);border-color:var(--red);}
+    .qty-val{font-size:13px;font-weight:700;color:#fff;min-width:14px;text-align:center;}
+    .sauce-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;}
+    .sauce-card.selected .sauce-check{opacity:1;transform:scale(1);}
+    .sauce-check svg{width:10px;height:10px;stroke:#fff;stroke-width:2.5;}
+
+    /* ── DRINK STEP ── */
+    .freestyle-wrap{display:flex;flex-direction:column;gap:16px;}
+    .brand-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+    .brand-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #2a2020;color:#6b6060;background:transparent;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+    .brand-tab:hover{border-color:#6b6060;color:#9c8f8f;}
+    .brand-tab.active{background:var(--red);border-color:var(--red);color:#fff;}
+    .drinks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+    .drink-card{border:1.5px solid #2a2020;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.2s;background:#171414;position:relative;}
+    .drink-card:hover{border-color:rgba(192,57,43,0.4);transform:translateY(-2px);}
+    .drink-card.selected{border-color:var(--red);background:#1e1010;}
+    .drink-color{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;transition:transform 0.2s;}
+    .drink-card:hover .drink-color{transform:scale(1.1);}
+    .drink-card.selected .drink-color{transform:scale(1.1);}
+    .drink-name{font-size:10px;font-weight:600;color:#9c8f8f;line-height:1.3;}
+    .drink-card.selected .drink-name{color:#f0ebe8;}
+    .drink-selected-badge{position:absolute;top:5px;right:5px;width:14px;height:14px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;}
+    .drink-card.selected .drink-selected-badge{opacity:1;transform:scale(1);}
+    .drink-selected-badge svg{width:8px;height:8px;stroke:#fff;stroke-width:3;}
+    .drink-size-row{display:flex;gap:8px;margin-top:4px;}
+    .size-opt{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid #2a2020;background:transparent;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;}
+    .size-opt:hover{border-color:#9c8f8f;color:#9c8f8f;}
+    .size-opt.active{border-color:var(--red);background:rgba(192,57,43,0.12);color:#fff;}
+    .selected-drink-preview{background:#1a1414;border:1px solid #2a2020;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-top:4px;}
+    .sdp-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;}
+    .sdp-info{flex:1;}
+    .sdp-name{font-size:13px;font-weight:600;color:#f0ebe8;}
+    .sdp-size{font-size:11px;color:#6b6060;margin-top:2px;}
+    .sdp-clear{background:none;border:none;color:#6b6060;cursor:pointer;font-size:18px;padding:0;line-height:1;transition:color 0.2s;}
+    .sdp-clear:hover{color:#e74c3c;}
+    .no-drink-row{text-align:center;padding:8px 0;}
+    .no-drink-btn{background:transparent;border:1.5px dashed #2a2020;border-radius:8px;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;padding:10px 20px;transition:all 0.2s;}
+    .no-drink-btn:hover{border-color:#9c8f8f;color:#9c8f8f;}
+    .no-drink-btn.active{border-color:var(--green,#4ade80);color:#4ade80;background:rgba(74,222,128,0.05);}
+
+    /* ── CONFIRM STEP ── */
+    .confirm-wrap{display:flex;flex-direction:column;gap:16px;}
+    .confirm-section{background:#171414;border:1px solid #2a2020;border-radius:12px;padding:16px 18px;}
+    .confirm-section h4{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#6b6060;margin-bottom:12px;}
+    .confirm-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #1e1a1a;}
+    .confirm-row:last-child{border:none;}
+    .confirm-row span:first-child{color:#9c8f8f;}
+    .confirm-row span:last-child{color:#f0ebe8;font-weight:500;}
+    .confirm-empty{font-size:13px;color:#6b6060;font-style:italic;}
+    .done-screen{text-align:center;padding:32px 20px;}
+    .done-emoji{font-size:64px;margin-bottom:16px;animation:bounceIn 0.5s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes bounceIn{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
+    .done-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:1px;margin-bottom:10px;}
+    .done-sub{font-size:14px;color:#6b6060;line-height:1.6;max-width:320px;margin:0 auto;}
+
     @media(max-width:768px){
       .hero{flex-direction:column;padding:40px 20px;}h1{font-size:52px;}
       .hero-right{flex-direction:row;flex-wrap:wrap;}
@@ -117,6 +217,11 @@
       .form-left{padding:32px 20px;}.form-right{padding:32px 20px;}
       .frow{grid-template-columns:1fr;}.strip{justify-content:flex-start;}
       .overlay-title{font-size:36px;}
+      .sauces-grid{grid-template-columns:repeat(2,1fr);}
+      .drinks-grid{grid-template-columns:repeat(3,1fr);}
+      .modal{max-height:100vh;border-radius:0;}
+      .modal-body{padding:20px;}
+      .modal-header,.modal-footer{padding:16px 20px;}
     }
   </style>
 </head>
@@ -279,7 +384,36 @@
     <a href="dashboard.html" style="font-size:11px;color:rgba(255,255,255,0.06);text-decoration:none;">admin</a>
   </footer>
 
+  <!-- ═══════════════════════════════════════════════
+       SAUCE + DRINK CUSTOMIZATION MODAL
+  ═══════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div class="modal-steps">
+          <div class="mstep active" id="mstep-1">1</div>
+          <div class="mstep-line"></div>
+          <div class="mstep upcoming" id="mstep-2">2</div>
+          <div class="mstep-line"></div>
+          <div class="mstep upcoming" id="mstep-3">✓</div>
+        </div>
+        <div class="modal-title" id="modal-title">Pick your sauces</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- injected by JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="modal-skip" id="modal-skip-btn" onclick="skipStep()">Skip</button>
+        <button class="modal-next" id="modal-next-btn" onclick="nextStep()">
+          Next: Pick a drink <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
+  /* ─── SCHEDULE / BADGE ───────────────────────────── */
   const SCHEDULE={0:[12*60,23*60],1:[11*60,23*60+30],2:[17*60+30,23*60+30],3:[11*60,23*60+30],4:[17*60+30,23*60+30],5:[11*60,23*60+30],6:[12*60,23*60]};
   const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   function getETNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));}
@@ -299,44 +433,410 @@
   function updateLocation(){var type=document.getElementById('loc-type').value,ids=['sel-dorm','sel-academic','sel-greek','sel-other'];ids.forEach(function(id){document.getElementById(id).classList.add('hidden');});if(type==='dorm')document.getElementById('sel-dorm').classList.remove('hidden');else if(type==='academic')document.getElementById('sel-academic').classList.remove('hidden');else if(type==='greek')document.getElementById('sel-greek').classList.remove('hidden');else if(type==='other')document.getElementById('sel-other').classList.remove('hidden');}
   function selectPay(el,method){document.querySelectorAll('.pay-opt').forEach(function(o){o.classList.remove('active');});el.classList.add('active');document.getElementById('pay-input').value=method;}
 
-  // ── WHERE ORDERS GO ───────────────────────────────
-  const DISCORD_WEBHOOK='https://discord.com/api/webhooks/1484220220141998113/jUqrHMPmFPm07MoLrc4MaqZH4D7WMcocpHhrLVieL9pGV019Gjo_zoaoqn95K5UB-yIo';
+  /* ─── SAUCE & DRINK DATA ─────────────────────────── */
+  const SAUCES = [
+    { id:'ketchup',       name:'Ketchup',        emoji:'🍅' },
+    { id:'mayo',          name:'Mayonnaise',      emoji:'🥚' },
+    { id:'ranch',         name:'Ranch',           emoji:'🌿' },
+    { id:'yellow_mustard',name:'Yellow Mustard',  emoji:'💛' },
+    { id:'honey_mustard', name:'Honey Mustard',   emoji:'🍯' },
+    { id:'bbq',           name:'BBQ Sauce',       emoji:'🔥' },
+  ];
 
-  // 🔧 STEP: go to sheetdb.io → create free account → connect your Google Sheet → paste the API URL below
-  const SHEETDB_URL='https://sheetdb.io/api/v1/jjmci5czl8hn3';
+  const DRINKS = {
+    'Coca-Cola': [
+      { id:'coke',          name:'Coca-Cola',       color:'#C0392B' },
+      { id:'coke_zero',     name:'Coke Zero',       color:'#2c2c2c' },
+      { id:'diet_coke',     name:'Diet Coke',       color:'#4a4a6a' },
+      { id:'coke_cherry',   name:'Cherry Coke',     color:'#8B0000' },
+      { id:'coke_vanilla',  name:'Vanilla Coke',    color:'#c8a86b' },
+      { id:'sprite',        name:'Sprite',          color:'#7ec8a0' },
+      { id:'sprite_zero',   name:'Sprite Zero',     color:'#a0d8b8' },
+      { id:'sprite_cherry', name:'Cherry Sprite',   color:'#9b4070' },
+    ],
+    'Fanta': [
+      { id:'fanta_orange',  name:'Fanta Orange',    color:'#f5820d' },
+      { id:'fanta_grape',   name:'Fanta Grape',     color:'#7b2fa8' },
+      { id:'fanta_strawb',  name:'Fanta Strawberry',color:'#e84393' },
+      { id:'fanta_peach',   name:'Fanta Peach',     color:'#f4a261' },
+      { id:'fanta_pineapple',name:'Fanta Pineapple',color:'#f4d35e' },
+    ],
+    'Powerade': [
+      { id:'pw_mountain',   name:'Mountain Berry Blast', color:'#3a7bd5' },
+      { id:'pw_fruit_punch',name:'Fruit Punch',     color:'#d63031' },
+      { id:'pw_orange',     name:'Orange',          color:'#e17055' },
+      { id:'pw_grape',      name:'Grape',           color:'#6c5ce7' },
+      { id:'pw_lemon',      name:'Lemon Lime',      color:'#00b894' },
+      { id:'pw_zero_mixed', name:'Zero Mixed Berry',color:'#74b9ff' },
+    ],
+    'Minute Maid': [
+      { id:'mm_lemonade',   name:'Lemonade',        color:'#f9ca24' },
+      { id:'mm_pink_lem',   name:'Pink Lemonade',   color:'#f8a5c2' },
+      { id:'mm_fruit_punch',name:'Fruit Punch',     color:'#e55039' },
+      { id:'mm_orange',     name:'Orange',          color:'#f39c12' },
+      { id:'mm_grape',      name:'Grape',           color:'#8e44ad' },
+    ],
+    'Barq\'s & Others': [
+      { id:'barqs',         name:"Barq's Root Beer",color:'#6b3a2a' },
+      { id:'mello_yello',   name:'Mello Yello',     color:'#c8d400' },
+      { id:'pibb',          name:'Pibb Xtra',       color:'#922b21' },
+      { id:'hi_c_orange',   name:'Hi-C Orange',     color:'#f39c12' },
+      { id:'seagrams',      name:"Seagram's Ginger",color:'#d4ac0d' },
+      { id:'water',         name:'Water',           color:'#aed6f1' },
+    ],
+  };
 
-  document.getElementById('order-form').addEventListener('submit',async function(e){
-    e.preventDefault();
-    const btn=this.querySelector('.submit');btn.textContent='Sending...';btn.disabled=true;
-    const data=new FormData(this);
-    const building=data.get('dorm')||data.get('academic_building')||data.get('greek_house')||data.get('other_location')||data.get('location_type')||'—';
-    const emailInput=document.getElementById('input-email');
-    const contactLabel=emailInput.disabled?'📱 Phone':'📧 Email';
-    const contactValue=emailInput.disabled?(data.get('phone')||'—'):(data.get('email')||'—');
-    const now=new Date().toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'short',timeStyle:'short'});
-    const orderId='#GT-'+Math.floor(1000+Math.random()*9000); // shared ID across all 3
+  const SIZES = ['Sm', 'Md', 'Lg'];
 
-    // 1️⃣ Formspree — email backup (unchanged)
-    const p1=fetch('https://formspree.io/f/mwvryqar',{method:'POST',body:data,headers:{'Accept':'application/json'}});
+  /* ─── MODAL STATE ────────────────────────────────── */
+  let modalStep = 1; // 1=sauce, 2=drink, 3=confirm
+  let sauceSelections = {}; // { id: qty }
+  let drinkSelection  = null; // { id, name, color, size }
+  let noDrink = false;
+  let activeBrand = Object.keys(DRINKS)[0];
+  let pendingOrderData = null; // store form data until modal finishes
+  let pendingOrderId   = null;
 
-    // 2️⃣ Discord — your live ping (now includes the order ID)
-    const p2=fetch(DISCORD_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:'🛵 **NEW DELIVERY ORDER!**',embeds:[{color:0xC0392B,title:'Order from '+data.get('first_name')+' '+data.get('last_name'),fields:[{name:'🆔 Order ID',value:orderId,inline:true},{name:'📦 G&T\'s Order #',value:data.get('order_number')||'—',inline:true},{name:'💳 Payment',value:data.get('payment_method')||'—',inline:true},{name:'📍 Deliver To',value:building,inline:false},{name:contactLabel,value:contactValue,inline:true},{name:'📝 Notes',value:data.get('notes')||'None',inline:false}],footer:{text:'Submitted at '+now}}]})});
+  /* ─── MODAL OPEN/CLOSE ───────────────────────────── */
+  function openModal() {
+    modalStep = 1;
+    sauceSelections = {};
+    drinkSelection  = null;
+    noDrink = false;
+    activeBrand = Object.keys(DRINKS)[0];
+    document.getElementById('modal-backdrop').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    renderModalStep();
+  }
+  function closeModal() {
+    document.getElementById('modal-backdrop').classList.remove('show');
+    document.body.style.overflow = '';
+  }
 
-    // 3️⃣ Google Sheets via SheetDB — feeds the dashboard (skipped until URL is set)
-    const p3=SHEETDB_URL!=='https://docs.google.com/spreadsheets/d/1DCJZjEFsJYsjrd69W2hsFSXQ-dmr8wbNljurDZ84wqw/edit#gid=0'
-      ?fetch(SHEETDB_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:{date:new Date().toISOString(),order_id:orderId,first_name:data.get('first_name')||'',last_name:data.get('last_name')||'',contact:contactValue,location:building,order_number:data.get('order_number')||'',payment_method:data.get('payment_method')||'',notes:data.get('notes')||'',fee:5}})})
-      :Promise.resolve();
+  /* ─── STEP RENDERING ─────────────────────────────── */
+  function renderModalStep() {
+    updateStepIndicators();
+    if (modalStep === 1) renderSauceStep();
+    else if (modalStep === 2) renderDrinkStep();
+    else renderConfirmStep();
+  }
 
-    try{
-      await Promise.all([p1,p2,p3]);
-      btn.textContent='✅ Order Received!';btn.style.background='#27ae60';
-      this.reset();switchContact('email');
-      document.querySelectorAll('.pay-opt').forEach(function(o){o.classList.remove('active');});
-      document.querySelector('.pay-opt').classList.add('active');
-      document.getElementById('pay-input').value='Venmo';
-    }catch(err){
-      btn.textContent='Something went wrong — try again';btn.style.background='#e74c3c';btn.disabled=false;
+  function updateStepIndicators() {
+    const s1 = document.getElementById('mstep-1');
+    const s2 = document.getElementById('mstep-2');
+    const s3 = document.getElementById('mstep-3');
+    const title = document.getElementById('modal-title');
+    const nextBtn = document.getElementById('modal-next-btn');
+    const skipBtn = document.getElementById('modal-skip-btn');
+
+    s1.className = 'mstep ' + (modalStep > 1 ? 'done' : modalStep === 1 ? 'active' : 'upcoming');
+    s2.className = 'mstep ' + (modalStep > 2 ? 'done' : modalStep === 2 ? 'active' : 'upcoming');
+    s3.className = 'mstep ' + (modalStep === 3 ? 'active' : 'upcoming');
+
+    if (modalStep === 1) {
+      title.textContent = 'Pick your sauces';
+      nextBtn.innerHTML = 'Next: Pick a drink <span>→</span>';
+      skipBtn.style.display = '';
+    } else if (modalStep === 2) {
+      title.textContent = 'Choose your drink';
+      nextBtn.innerHTML = 'Review & confirm <span>→</span>';
+      skipBtn.style.display = '';
+    } else {
+      title.textContent = 'Confirm extras';
+      nextBtn.innerHTML = '🛵 Send order!';
+      skipBtn.style.display = 'none';
     }
+  }
+
+  /* ── SAUCE STEP ── */
+  function renderSauceStep() {
+    const body = document.getElementById('modal-body');
+    body.innerHTML = `
+      <p class="step-label">Select any sauces you'd like — up to <strong>3 packets each</strong>. Tap a sauce to add it.</p>
+      <div class="sauces-grid" id="sauces-grid">
+        ${SAUCES.map(s => `
+          <div class="sauce-card ${sauceSelections[s.id] ? 'selected' : ''}" id="sc-${s.id}" onclick="toggleSauce('${s.id}')">
+            <div class="sauce-check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3"/></svg></div>
+            <span class="sauce-emoji">${s.emoji}</span>
+            <div class="sauce-name">${s.name}</div>
+            <div class="sauce-qty" id="sq-${s.id}">
+              <button class="qty-btn" onclick="event.stopPropagation();changeQty('${s.id}',-1)">−</button>
+              <span class="qty-val" id="qv-${s.id}">${sauceSelections[s.id] || 1}</span>
+              <button class="qty-btn" onclick="event.stopPropagation();changeQty('${s.id}',1)">+</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+
+  function toggleSauce(id) {
+    if (sauceSelections[id]) {
+      delete sauceSelections[id];
+      document.getElementById('sc-' + id).classList.remove('selected');
+    } else {
+      sauceSelections[id] = 1;
+      document.getElementById('sc-' + id).classList.add('selected');
+    }
+  }
+
+  function changeQty(id, delta) {
+    if (!sauceSelections[id]) return;
+    const newVal = Math.min(3, Math.max(1, (sauceSelections[id] || 1) + delta));
+    sauceSelections[id] = newVal;
+    document.getElementById('qv-' + id).textContent = newVal;
+  }
+
+  /* ── DRINK STEP ── */
+  function renderDrinkStep() {
+    const body = document.getElementById('modal-body');
+    const brands = Object.keys(DRINKS);
+
+    body.innerHTML = `
+      <p class="step-label">Pick one drink from the Freestyle machine — or skip if you don't want one.</p>
+      <div class="freestyle-wrap">
+        <div class="brand-tabs">
+          ${brands.map(b => `<button class="brand-tab ${b === activeBrand ? 'active' : ''}" onclick="switchBrand('${b}')">${b}</button>`).join('')}
+        </div>
+        <div class="drinks-grid" id="drinks-grid">
+          ${renderDrinksGrid()}
+        </div>
+        ${drinkSelection ? `
+        <div class="selected-drink-preview">
+          <div class="sdp-dot" style="background:${drinkSelection.color}"></div>
+          <div class="sdp-info">
+            <div class="sdp-name">${drinkSelection.name}</div>
+            <div class="sdp-size">Size: ${drinkSelection.size}</div>
+          </div>
+          <button class="sdp-clear" onclick="clearDrink()" title="Remove">×</button>
+        </div>` : ''}
+        <div class="drink-size-row" id="drink-size-row" style="${drinkSelection || !document.querySelector('.drink-card.selected') ? '' : ''}">
+          ${SIZES.map(sz => `<button class="size-opt ${drinkSelection && drinkSelection.size === sz ? 'active' : ''}" onclick="selectSize('${sz}')">${sz}</button>`).join('')}
+        </div>
+        <div class="no-drink-row">
+          <button class="no-drink-btn ${noDrink ? 'active' : ''}" onclick="toggleNoDrink()">
+            ${noDrink ? '✓ No drink — confirmed' : 'No drink for me'}
+          </button>
+        </div>
+      </div>`;
+  }
+
+  function renderDrinksGrid() {
+    return DRINKS[activeBrand].map(d => `
+      <div class="drink-card ${drinkSelection && drinkSelection.id === d.id ? 'selected' : ''}" id="dk-${d.id}" onclick="selectDrink('${d.id}','${d.name}','${d.color}')">
+        <div class="drink-selected-badge"><svg viewBox="0 0 10 10" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
+        <div class="drink-color" style="background:${d.color}"></div>
+        <div class="drink-name">${d.name}</div>
+      </div>`).join('');
+  }
+
+  function switchBrand(brand) {
+    activeBrand = brand;
+    renderDrinkStep();
+  }
+
+  function selectDrink(id, name, color) {
+    noDrink = false;
+    const size = drinkSelection ? drinkSelection.size : 'Md';
+    drinkSelection = { id, name, color, size };
+    renderDrinkStep();
+  }
+
+  function selectSize(sz) {
+    if (drinkSelection) {
+      drinkSelection.size = sz;
+      renderDrinkStep();
+    }
+  }
+
+  function clearDrink() {
+    drinkSelection = null;
+    renderDrinkStep();
+  }
+
+  function toggleNoDrink() {
+    noDrink = !noDrink;
+    if (noDrink) drinkSelection = null;
+    renderDrinkStep();
+  }
+
+  /* ── CONFIRM STEP ── */
+  function renderConfirmStep() {
+    const body = document.getElementById('modal-body');
+
+    const sauceEntries = Object.entries(sauceSelections);
+    const sauceHtml = sauceEntries.length
+      ? sauceEntries.map(([id, qty]) => {
+          const s = SAUCES.find(x => x.id === id);
+          return `<div class="confirm-row"><span>${s.emoji} ${s.name}</span><span>×${qty} packet${qty > 1 ? 's' : ''}</span></div>`;
+        }).join('')
+      : '<p class="confirm-empty">No sauces</p>';
+
+    const drinkHtml = drinkSelection
+      ? `<div class="confirm-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:${drinkSelection.color};display:inline-block"></span>${drinkSelection.name}</span><span>${drinkSelection.size}</span></div>`
+      : '<p class="confirm-empty">No drink</p>';
+
+    body.innerHTML = `
+      <div class="confirm-wrap">
+        <p class="step-label">Everything look right? Hit <strong>Send order</strong> and we'll take it from here.</p>
+        <div class="confirm-section">
+          <h4>🥫 Sauces</h4>${sauceHtml}
+        </div>
+        <div class="confirm-section">
+          <h4>🥤 Drink</h4>${drinkHtml}
+        </div>
+      </div>`;
+  }
+
+  /* ── STEP NAV ── */
+  function nextStep() {
+    if (modalStep < 3) {
+      modalStep++;
+      renderModalStep();
+    } else {
+      sendExtrasAndFinish();
+    }
+  }
+
+  function skipStep() {
+    if (modalStep === 1) sauceSelections = {};
+    if (modalStep === 2) { drinkSelection = null; noDrink = true; }
+    modalStep++;
+    if (modalStep > 3) { sendExtrasAndFinish(); return; }
+    renderModalStep();
+  }
+
+  /* ─── DISCORD / SHEETS ───────────────────────────── */
+  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484220220141998113/jUqrHMPmFPm07MoLrc4MaqZH4D7WMcocpHhrLVieL9pGV019Gjo_zoaoqn95K5UB-yIo';
+  const SHEETDB_URL     = 'https://sheetdb.io/api/v1/jjmci5czl8hn3';
+
+  function buildExtrasString() {
+    const sauces = Object.entries(sauceSelections).map(([id, qty]) => {
+      const s = SAUCES.find(x => x.id === id);
+      return `${s.name} ×${qty}`;
+    }).join(', ') || 'None';
+
+    const drink = drinkSelection ? `${drinkSelection.name} (${drinkSelection.size})` : 'None';
+    return { sauces, drink };
+  }
+
+  async function sendExtrasAndFinish() {
+    const nextBtn = document.getElementById('modal-next-btn');
+    nextBtn.textContent = 'Sending...';
+    nextBtn.disabled = true;
+
+    const { sauces, drink } = buildExtrasString();
+    const { data, orderId, building, contactLabel, contactValue, now } = pendingOrderData;
+
+    // Build enriched Discord embed
+    const p2 = fetch(DISCORD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: '🛵 **NEW DELIVERY ORDER!**',
+        embeds: [{
+          color: 0xC0392B,
+          title: 'Order from ' + data.get('first_name') + ' ' + data.get('last_name'),
+          fields: [
+            { name: '🆔 Order ID',       value: orderId,                        inline: true  },
+            { name: '📦 G&T\'s Order #', value: data.get('order_number') || '—', inline: true  },
+            { name: '💳 Payment',         value: data.get('payment_method') || '—', inline: true },
+            { name: '📍 Deliver To',      value: building,                       inline: false },
+            { name: contactLabel,         value: contactValue,                   inline: true  },
+            { name: '🥫 Sauces',          value: sauces,                         inline: true  },
+            { name: '🥤 Drink',           value: drink,                          inline: true  },
+            { name: '📝 Notes',           value: data.get('notes') || 'None',    inline: false },
+          ],
+          footer: { text: 'Submitted at ' + now }
+        }]
+      })
+    });
+
+    // SheetDB with extras columns
+    const p3 = SHEETDB_URL !== 'PASTE_YOUR_SHEETDB_URL_HERE'
+      ? fetch(SHEETDB_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: {
+            date:           new Date().toISOString(),
+            order_id:       orderId,
+            first_name:     data.get('first_name') || '',
+            last_name:      data.get('last_name')  || '',
+            contact:        contactValue,
+            location:       building,
+            order_number:   data.get('order_number') || '',
+            payment_method: data.get('payment_method') || '',
+            notes:          data.get('notes') || '',
+            sauces:         sauces,
+            drink:          drink,
+            fee:            5
+          }})
+        })
+      : Promise.resolve();
+
+    // Formspree backup (extras in notes)
+    const extraNote = `\n\n--- EXTRAS ---\nSauces: ${sauces}\nDrink: ${drink}`;
+    const formData = new FormData();
+    for (const [k, v] of data.entries()) formData.append(k, v);
+    formData.set('notes', (data.get('notes') || '') + extraNote);
+    const p1 = fetch('https://formspree.io/f/mwvryqar', {
+      method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
+    });
+
+    try {
+      await Promise.all([p1, p2, p3]);
+      showDoneScreen();
+    } catch (err) {
+      nextBtn.textContent = 'Something went wrong — try again';
+      nextBtn.disabled = false;
+    }
+  }
+
+  function showDoneScreen() {
+    document.getElementById('modal-title').textContent = "You're all set!";
+    document.getElementById('modal-footer').style.display = 'none';
+    document.getElementById('modal-body').innerHTML = `
+      <div class="done-screen">
+        <div class="done-emoji">🛵</div>
+        <div class="done-title">Order Received!</div>
+        <div class="done-sub">Your runner is on it. Expect a knock at your door soon. Make sure you have your $5 ready!</div>
+      </div>`;
+    // Update the submit button on the main form too
+    const btn = document.querySelector('.submit');
+    if (btn) { btn.textContent = '✅ Order Received!'; btn.style.background = '#27ae60'; }
+    // Auto-close after 4s
+    setTimeout(() => closeModal(), 4000);
+  }
+
+  /* ─── FORM SUBMIT ────────────────────────────────── */
+  document.getElementById('order-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const data     = new FormData(this);
+    const building = data.get('dorm') || data.get('academic_building') || data.get('greek_house') || data.get('other_location') || data.get('location_type') || '—';
+    const emailInput  = document.getElementById('input-email');
+    const contactLabel = emailInput.disabled ? '📱 Phone' : '📧 Email';
+    const contactValue = emailInput.disabled ? (data.get('phone') || '—') : (data.get('email') || '—');
+    const now    = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' });
+    const orderId = '#GT-' + Math.floor(1000 + Math.random() * 9000);
+
+    // Store for later use in sendExtrasAndFinish
+    pendingOrderData = { data, orderId, building, contactLabel, contactValue, now };
+
+    btn.textContent = '✅ Now pick your extras →';
+    btn.style.background = '#27ae60';
+
+    // Reset form fields (but not the button yet)
+    this.reset();
+    switchContact('email');
+    document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
+    document.querySelector('.pay-opt').classList.add('active');
+    document.getElementById('pay-input').value = 'Venmo';
+
+    // Open the extras modal
+    openModal();
   });
   </script>
 </body>
