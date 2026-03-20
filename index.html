@@ -136,10 +136,10 @@
     .modal-next{background:var(--red);border:none;color:#fff;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s;}
     .modal-next:hover{background:#a93226;}
     .modal-next:disabled{background:#3a2020;color:#6b6060;cursor:not-allowed;}
-    .step-label{font-size:12px;color:#6b6060;margin-bottom:20px;}
+    .step-label{font-size:12px;color:#6b6060;margin-bottom:16px;}
     .step-label strong{color:#9c8f8f;}
 
-    /* Sauce */
+    /* ═══════════ SAUCE STEP ═══════════ */
     .sauces-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
     .sauce-card{border:1.5px solid #2a2020;border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;background:#171414;overflow:hidden;}
     .sauce-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(192,57,43,0.18),transparent 70%);opacity:0;transition:opacity 0.3s;pointer-events:none;}
@@ -159,34 +159,52 @@
     .sauce-card.selected .sauce-check{opacity:1;transform:scale(1);}
     .sauce-check svg{width:10px;height:10px;stroke:#fff;stroke-width:2.5;}
 
-    /* Drink */
-    .freestyle-wrap{display:flex;flex-direction:column;gap:14px;}
-    .brand-tabs{display:flex;gap:8px;flex-wrap:wrap;}
-    .brand-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #2a2020;color:#6b6060;background:transparent;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
-    .brand-tab:hover{border-color:#6b6060;color:#9c8f8f;}
-    .brand-tab.active{background:var(--red);border-color:var(--red);color:#fff;}
-    .drinks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-    .drink-card{border:1.5px solid #2a2020;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.2s;background:#171414;position:relative;}
-    .drink-card:hover{border-color:rgba(192,57,43,0.4);transform:translateY(-2px);}
-    .drink-card.selected{border-color:var(--red);background:#1e1010;}
-    .drink-color{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;transition:transform 0.2s;}
-    .drink-card:hover .drink-color,.drink-card.selected .drink-color{transform:scale(1.1);}
-    .drink-name{font-size:10px;font-weight:600;color:#9c8f8f;line-height:1.3;}
-    .drink-card.selected .drink-name{color:#f0ebe8;}
-    .drink-selected-badge{position:absolute;top:5px;right:5px;width:14px;height:14px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;}
-    .drink-card.selected .drink-selected-badge{opacity:1;transform:scale(1);}
-    .drink-selected-badge svg{width:8px;height:8px;stroke:#fff;stroke-width:3;}
-    .selected-drink-preview{background:#1a1414;border:1px solid #2a2020;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
-    .sdp-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;}
-    .sdp-name{font-size:13px;font-weight:600;color:#f0ebe8;flex:1;}
-    .sdp-clear{background:none;border:none;color:#6b6060;cursor:pointer;font-size:18px;padding:0;line-height:1;transition:color 0.2s;}
-    .sdp-clear:hover{color:#e74c3c;}
-    .ice-row{display:flex;gap:8px;}
-    .ice-opt{flex:1;padding:9px 8px;border-radius:8px;border:1.5px solid #2a2020;background:transparent;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;}
+    /* ═══════════ FREESTYLE MACHINE DRINK PICKER ═══════════ */
+    .freestyle-machine{position:relative;width:100%;background:#0a0a0f;border-radius:16px;overflow:hidden;min-height:420px;border:1px solid #1a1a2e;}
+    .machine-screen{position:relative;width:100%;height:420px;overflow:hidden;}
+
+    /* Bubble field */
+    .bubbles-field{position:relative;width:100%;height:100%;}
+    .brand-bubble{position:absolute;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s, opacity 0.3s;user-select:none;-webkit-user-select:none;}
+    .brand-bubble:hover{transform:scale(1.12)!important;z-index:10;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+    .brand-bubble.selected-brand{transform:scale(1.15)!important;z-index:10;outline:3px solid #fff;outline-offset:3px;}
+    .brand-bubble .b-label{font-size:9px;font-weight:700;color:#fff;text-align:center;letter-spacing:0.3px;line-height:1.2;padding:2px 4px;text-shadow:0 1px 3px rgba(0,0,0,0.8);pointer-events:none;}
+    .brand-bubble .b-name{font-size:7px;font-weight:600;color:rgba(255,255,255,0.75);text-align:center;margin-top:1px;pointer-events:none;}
+
+    /* Flavor drill-in panel */
+    .flavor-panel{position:absolute;inset:0;background:#0a0a0f;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.35s cubic-bezier(.25,.46,.45,.94);z-index:20;}
+    .flavor-panel.open{transform:translateX(0);}
+    .flavor-panel-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #1a1a2e;flex-shrink:0;}
+    .flavor-back-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;padding:6px 12px;transition:all 0.2s;}
+    .flavor-back-btn:hover{background:rgba(255,255,255,0.15);}
+    .flavor-brand-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;}
+    .flavor-brand-name{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1px;}
+    .flavor-bubbles-wrap{flex:1;position:relative;overflow:hidden;}
+    .flavor-bubbles-field{position:relative;width:100%;height:100%;}
+    .flavor-bubble{position:absolute;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s;user-select:none;}
+    .flavor-bubble:hover{transform:scale(1.15)!important;z-index:10;box-shadow:0 6px 24px rgba(0,0,0,0.5);}
+    .flavor-bubble.selected-flavor{outline:3px solid #fff;outline-offset:2px;transform:scale(1.1)!important;}
+    .flavor-bubble .f-name{font-size:8px;font-weight:700;color:#fff;text-align:center;line-height:1.2;padding:2px 4px;text-shadow:0 1px 3px rgba(0,0,0,0.9);pointer-events:none;}
+    .flavor-bubble .f-sub{font-size:6.5px;color:rgba(255,255,255,0.7);text-align:center;pointer-events:none;}
+
+    /* Bottom bar */
+    .machine-bottom-bar{padding:10px 14px;background:#111;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;}
+    .machine-filter-tabs{display:flex;gap:6px;}
+    .mft{padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:transparent;font-family:'DM Sans',sans-serif;transition:all 0.2s;letter-spacing:0.5px;}
+    .mft.active{background:var(--red);border-color:var(--red);color:#fff;}
+    .machine-selected-preview{display:flex;align-items:center;gap:8px;}
+    .msp-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
+    .msp-name{font-size:11px;font-weight:600;color:#f0ebe8;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .msp-clear{background:none;border:none;color:#6b6060;cursor:pointer;font-size:16px;padding:0;line-height:1;transition:color 0.2s;}
+    .msp-clear:hover{color:#e74c3c;}
+
+    /* Ice row */
+    .ice-row{display:flex;gap:8px;padding:10px 14px;background:#0d0d0d;border-top:1px solid #1a1a2e;}
+    .ice-opt{flex:1;padding:7px 8px;border-radius:8px;border:1.5px solid #2a2020;background:transparent;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;}
     .ice-opt:hover{border-color:#9c8f8f;color:#9c8f8f;}
     .ice-opt.active{border-color:#74b9ff;background:rgba(116,185,255,0.08);color:#74b9ff;}
-    .no-drink-row{text-align:center;}
-    .no-drink-btn{background:transparent;border:1.5px dashed #2a2020;border-radius:8px;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;padding:10px 20px;transition:all 0.2s;}
+    .no-drink-row{padding:8px 14px;background:#0d0d0d;border-top:1px solid #1a1a2e;text-align:center;}
+    .no-drink-btn{background:transparent;border:1.5px dashed #2a2020;border-radius:8px;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;padding:7px 16px;transition:all 0.2s;width:100%;}
     .no-drink-btn:hover{border-color:#9c8f8f;color:#9c8f8f;}
     .no-drink-btn.active{border-color:#4ade80;color:#4ade80;background:rgba(74,222,128,0.05);}
 
@@ -214,10 +232,10 @@
       .frow{grid-template-columns:1fr;}.strip{justify-content:flex-start;}
       .overlay-title{font-size:36px;}
       .sauces-grid{grid-template-columns:repeat(2,1fr);}
-      .drinks-grid{grid-template-columns:repeat(3,1fr);}
       .modal{max-height:100vh;border-radius:0;}
       .modal-body{padding:16px;}
       .modal-header,.modal-footer{padding:16px 20px;}
+      .machine-screen{height:340px;}
     }
   </style>
 </head>
@@ -418,7 +436,7 @@
   function updateLocation(){var type=document.getElementById('loc-type').value,ids=['sel-dorm','sel-academic','sel-greek','sel-other'];ids.forEach(function(id){document.getElementById(id).classList.add('hidden');});if(type==='dorm')document.getElementById('sel-dorm').classList.remove('hidden');else if(type==='academic')document.getElementById('sel-academic').classList.remove('hidden');else if(type==='greek')document.getElementById('sel-greek').classList.remove('hidden');else if(type==='other')document.getElementById('sel-other').classList.remove('hidden');}
   function selectPay(el,method){document.querySelectorAll('.pay-opt').forEach(function(o){o.classList.remove('active');});el.classList.add('active');document.getElementById('pay-input').value=method;}
 
-  /* ── DATA ── */
+  /* ── SAUCE DATA ── */
   const SAUCES=[
     {id:'ketchup',name:'Ketchup',img:'ketchup.png'},
     {id:'mayo',name:'Mayonnaise',img:'mayo.png'},
@@ -427,44 +445,198 @@
     {id:'honey_mustard',name:'Honey Mustard',img:'honey_mustard.png'},
     {id:'bbq',name:'BBQ Sauce',img:'bbq.png'},
   ];
-  const DRINKS={
-    'Coca-Cola':[
-      {id:'coke',name:'Coca-Cola',color:'#C0392B'},{id:'coke_zero',name:'Coke Zero',color:'#2c2c2c'},
-      {id:'diet_coke',name:'Diet Coke',color:'#4a4a6a'},{id:'coke_cherry',name:'Cherry Coke',color:'#8B0000'},
-      {id:'coke_vanilla',name:'Vanilla Coke',color:'#c8a86b'},{id:'sprite',name:'Sprite',color:'#7ec8a0'},
-      {id:'sprite_zero',name:'Sprite Zero',color:'#a0d8b8'},{id:'sprite_cherry',name:'Cherry Sprite',color:'#9b4070'},
-    ],
-    'Fanta':[
-      {id:'fanta_orange',name:'Fanta Orange',color:'#f5820d'},{id:'fanta_grape',name:'Fanta Grape',color:'#7b2fa8'},
-      {id:'fanta_strawb',name:'Fanta Strawberry',color:'#e84393'},{id:'fanta_peach',name:'Fanta Peach',color:'#f4a261'},
-      {id:'fanta_pineapple',name:'Fanta Pineapple',color:'#f4d35e'},
-    ],
-    'Powerade':[
-      {id:'pw_mountain',name:'Mountain Berry',color:'#3a7bd5'},{id:'pw_fruit_punch',name:'Fruit Punch',color:'#d63031'},
-      {id:'pw_orange',name:'Orange',color:'#e17055'},{id:'pw_grape',name:'Grape',color:'#6c5ce7'},
-      {id:'pw_lemon',name:'Lemon Lime',color:'#00b894'},{id:'pw_zero_mixed',name:'Zero Mixed Berry',color:'#74b9ff'},
-    ],
-    'Minute Maid':[
-      {id:'mm_lemonade',name:'Lemonade',color:'#f9ca24'},{id:'mm_pink_lem',name:'Pink Lemonade',color:'#f8a5c2'},
-      {id:'mm_fruit_punch',name:'Fruit Punch',color:'#e55039'},{id:'mm_orange',name:'Orange',color:'#f39c12'},
-      {id:'mm_grape',name:'Grape',color:'#8e44ad'},
-    ],
-    "Barq's & Others":[
-      {id:'barqs',name:"Barq's Root Beer",color:'#6b3a2a'},{id:'mello_yello',name:'Mello Yello',color:'#c8d400'},
-      {id:'pibb',name:'Pibb Xtra',color:'#922b21'},{id:'hi_c_orange',name:'Hi-C Orange',color:'#f39c12'},
-      {id:'seagrams',name:"Seagram's Ginger",color:'#d4ac0d'},{id:'water',name:'Water',color:'#aed6f1'},
-    ],
-  };
+
+  /* ── FREESTYLE DRINK DATA ── */
+  const BRANDS = [
+    {
+      id:'coca-cola', name:'Coca-Cola', color:'#C0392B', textColor:'#fff',
+      size:72,
+      flavors:[
+        {id:'coke-og',name:'Original',sub:'Coca-Cola',color:'#C0392B'},
+        {id:'coke-zero',name:'Zero Sugar',sub:'Coca-Cola',color:'#1a1a1a'},
+        {id:'diet-coke',name:'Diet Coke',sub:'',color:'#e8e8e8',textDark:true},
+        {id:'diet-coke-caff',name:'Caff. Free',sub:'Diet Coke',color:'#d4c5a0',textDark:true},
+        {id:'coke-cherry',name:'Cherry',sub:'Coca-Cola',color:'#8B0000'},
+        {id:'coke-vanilla',name:'Vanilla',sub:'Coca-Cola',color:'#c8a86b',textDark:true},
+        {id:'coke-orange',name:'Orange',sub:'Coca-Cola',color:'#e07820'},
+        {id:'coke-lemon',name:'Lemon',sub:'Coca-Cola',color:'#d4c832',textDark:true},
+        {id:'coke-lime',name:'Lime',sub:'Coca-Cola',color:'#4a9e3a'},
+        {id:'coke-peach',name:'Peach',sub:'Coca-Cola',color:'#e8956a',textDark:true},
+        {id:'coke-creme',name:'Crème Soda',sub:'Coca-Cola',color:'#c8a050',textDark:true},
+        {id:'coke-cherry-vanilla',name:'Cherry Vanilla',sub:'Coca-Cola',color:'#9b2060'},
+      ]
+    },
+    {
+      id:'sprite', name:'Sprite', color:'#27AE60', textColor:'#fff',
+      size:58,
+      flavors:[
+        {id:'sprite-og',name:'Original',sub:'Sprite',color:'#27AE60'},
+        {id:'sprite-zero',name:'Zero Sugar',sub:'Sprite',color:'#1a8a45'},
+        {id:'sprite-cherry',name:'Cherry',sub:'Sprite',color:'#9b4070'},
+        {id:'sprite-tropical',name:'Tropical Mix',sub:'Sprite',color:'#e8c820',textDark:true},
+      ]
+    },
+    {
+      id:'diet-coke', name:'Diet Coke', color:'#888', textColor:'#fff',
+      size:56,
+      flavors:[
+        {id:'diet-coke-main',name:'Diet Coke',sub:'Original',color:'#888'},
+        {id:'diet-coke-caff-free',name:'Caffeine Free',sub:'Diet Coke',color:'#b8a88a',textDark:true},
+      ]
+    },
+    {
+      id:'fanta', name:'Fanta', color:'#E67E22', textColor:'#fff',
+      size:60,
+      flavors:[
+        {id:'fanta-og',name:'Orange',sub:'Fanta',color:'#E67E22'},
+        {id:'fanta-zero',name:'Zero',sub:'Fanta',color:'#c86010'},
+        {id:'fanta-grape',name:'Grape',sub:'Fanta',color:'#7b2fa8'},
+        {id:'fanta-strawb',name:'Strawberry',sub:'Fanta',color:'#e84393'},
+        {id:'fanta-peach',name:'Peach',sub:'Fanta',color:'#f4a261',textDark:true},
+        {id:'fanta-pineapple',name:'Pineapple',sub:'Fanta',color:'#f4d35e',textDark:true},
+      ]
+    },
+    {
+      id:'pibb', name:'Pibb Xtra', color:'#7B241C', textColor:'#fff',
+      size:50,
+      flavors:[
+        {id:'pibb-xtra',name:'Pibb Xtra',sub:'',color:'#7B241C'},
+        {id:'pibb-zero',name:'Pibb Zero',sub:'',color:'#5a5a6a'},
+      ]
+    },
+    {
+      id:'barqs', name:"Barq's", color:'#3d1f0d', textColor:'#fff',
+      size:52,
+      flavors:[
+        {id:'barqs-og',name:'Root Beer',sub:"Barq's",color:'#6b3a2a'},
+        {id:'barqs-zero',name:'Zero Sugar',sub:"Barq's Root Beer",color:'#2c2c2c'},
+        {id:'barqs-creme',name:'Cream Soda',sub:"Barq's",color:'#c8a878',textDark:true},
+        {id:'barqs-creme-zero',name:'Zero Cream Soda',sub:"Barq's",color:'#a08858',textDark:true},
+      ]
+    },
+    {
+      id:'mello-yello', name:'Mello Yello', color:'#c8d400', textColor:'#111',
+      size:52,
+      flavors:[
+        {id:'mello-og',name:'Mello Yello',sub:'Original',color:'#c8d400',textDark:true},
+        {id:'mello-zero',name:'Zero Sugar',sub:'Mello Yello',color:'#a0aa00',textDark:true},
+      ]
+    },
+    {
+      id:'powerade', name:'Powerade', color:'#1a5fa8', textColor:'#fff',
+      size:58,
+      flavors:[
+        {id:'pw-mountain',name:'Mountain Berry Blast',sub:'Powerade',color:'#1a5fa8'},
+        {id:'pw-fruit',name:'Fruit Punch',sub:'Powerade',color:'#d63031'},
+        {id:'pw-orange',name:'Orange',sub:'Powerade',color:'#e17055'},
+        {id:'pw-grape',name:'Grape',sub:'Powerade',color:'#6c5ce7'},
+        {id:'pw-lemon',name:'Lemon Lime',sub:'Powerade',color:'#00b894'},
+        {id:'pw-zero-berry',name:'Zero Mixed Berry',sub:'Powerade',color:'#74b9ff',textDark:true},
+        {id:'pw-zero-fruit',name:'Zero Fruit Punch',sub:'Powerade',color:'#c0392b'},
+        {id:'pw-zero-grape',name:'Zero Grape',sub:'Powerade',color:'#5a4ab8'},
+      ]
+    },
+    {
+      id:'minute-maid', name:'Minute Maid', color:'#e8820a', textColor:'#fff',
+      size:60,
+      flavors:[
+        {id:'mm-lemon',name:'Lemonade',sub:'Minute Maid',color:'#f9ca24',textDark:true},
+        {id:'mm-light-lemon',name:'Light Lemonade',sub:'Minute Maid',color:'#fad860',textDark:true},
+        {id:'mm-sparkling',name:'Sparkling',sub:'Minute Maid',color:'#74b9ff',textDark:true},
+        {id:'mm-light-sparkling',name:'Light Sparkling',sub:'Minute Maid',color:'#a8d8ff',textDark:true},
+        {id:'mm-drinks',name:'Drinks',sub:'Minute Maid',color:'#e8820a'},
+        {id:'mm-light-drinks',name:'Light Drinks',sub:'Minute Maid',color:'#f4a460'},
+      ]
+    },
+    {
+      id:'hi-c', name:'Hi-C', color:'#e8a020', textColor:'#fff',
+      size:46,
+      flavors:[
+        {id:'hi-c-og',name:'Hi-C',sub:'Orange',color:'#e8a020',textDark:true},
+      ]
+    },
+    {
+      id:'seagrams', name:"Seagram's", color:'#c8a800', textColor:'#111',
+      size:50,
+      flavors:[
+        {id:'seag-og',name:'Ginger Ale',sub:"Seagram's",color:'#d4ac0d',textDark:true},
+        {id:'seag-zero',name:'Zero Sugar Ginger Ale',sub:"Seagram's",color:'#b89600',textDark:true},
+      ]
+    },
+    {
+      id:'aha', name:'AHA', color:'#00b4d8', textColor:'#fff',
+      size:50,
+      flavors:[
+        {id:'aha-sparkling',name:'Sparkling Water',sub:'AHA',color:'#00b4d8',textDark:true},
+      ]
+    },
+    {
+      id:'vitaminwater', name:'Vitaminwater', color:'#ff6b9d', textColor:'#fff',
+      size:58,
+      flavors:[
+        {id:'vw-og',name:'Vitaminwater',sub:'Original',color:'#ff6b9d'},
+        {id:'vw-zero',name:'Zero Sugar',sub:'Vitaminwater',color:'#cc4477'},
+      ]
+    },
+    {
+      id:'peace-tea', name:'Peace Tea', color:'#2d8a4e', textColor:'#fff',
+      size:54,
+      flavors:[
+        {id:'pt-og',name:'Peace Tea',sub:'Original',color:'#2d8a4e'},
+        {id:'pt-zero',name:'Zero Sugar',sub:'Peace Tea',color:'#1a6a38'},
+        {id:'pt-caddy',name:'Caddy Shack',sub:'Peace Tea',color:'#8B6914',textDark:true},
+        {id:'pt-sweet',name:'Sweet Tea',sub:'Peace Tea',color:'#c8960a',textDark:true},
+        {id:'pt-lemon',name:'Sweet Lemon',sub:'Peace Tea',color:'#d4c032',textDark:true},
+        {id:'pt-strawb',name:'Strawberry',sub:'Peace Tea',color:'#e84060'},
+        {id:'pt-peach',name:'Just Peachy',sub:'Peace Tea',color:'#f4a060',textDark:true},
+      ]
+    },
+    {
+      id:'aguas', name:'Aguas Frescas', color:'#e84060', textColor:'#fff',
+      size:56,
+      flavors:[
+        {id:'aguas-og',name:'Aguas Frescas',sub:'',color:'#e84060'},
+      ]
+    },
+    {
+      id:'water', name:'Water', color:'#a8d8ea', textColor:'#111',
+      size:44,
+      flavors:[
+        {id:'water-plain',name:'Water',sub:'',color:'#a8d8ea',textDark:true},
+      ]
+    },
+  ];
+
+  /* ── BUBBLE POSITIONS — pre-set to look like the real machine ── */
+  const BRAND_POSITIONS = [
+    {id:'coca-cola',   x:36, y:38},
+    {id:'diet-coke',   x:22, y:58},
+    {id:'sprite',      x:55, y:55},
+    {id:'fanta',       x:70, y:35},
+    {id:'pibb',        x:80, y:58},
+    {id:'barqs',       x:14, y:30},
+    {id:'mello-yello', x:48, y:22},
+    {id:'powerade',    x:62, y:72},
+    {id:'minute-maid', x:82, y:78},
+    {id:'hi-c',        x:28, y:76},
+    {id:'seagrams',    x:44, y:78},
+    {id:'aha',         x:88, y:22},
+    {id:'vitaminwater',x:76, y:18},
+    {id:'peace-tea',   x:10, y:50},
+    {id:'aguas',       x:90, y:48},
+    {id:'water',       x:8,  y:72},
+  ];
 
   /* ── STATE ── */
   let modalStep=1, sauceSelections={}, drinkSelection=null, iceChoice='ice', noDrink=false;
-  let activeBrand=Object.keys(DRINKS)[0], pendingOrderData=null;
+  let pendingOrderData=null;
+  let currentFlavorBrand=null;
 
-  /* ── OPEN/CLOSE ── */
-  function openModal(){modalStep=1;sauceSelections={};drinkSelection=null;iceChoice='ice';noDrink=false;activeBrand=Object.keys(DRINKS)[0];document.getElementById('modal-backdrop').classList.add('show');document.body.style.overflow='hidden';renderModalStep();}
+  /* ── OPEN/CLOSE MODAL ── */
+  function openModal(){modalStep=1;sauceSelections={};drinkSelection=null;iceChoice='ice';noDrink=false;currentFlavorBrand=null;document.getElementById('modal-backdrop').classList.add('show');document.body.style.overflow='hidden';renderModalStep();}
   function closeModal(){document.getElementById('modal-backdrop').classList.remove('show');document.body.style.overflow='';}
 
-  /* ── RENDER ── */
+  /* ── RENDER STEP ── */
   function renderModalStep(){
     document.getElementById('mstep-1').className='mstep '+(modalStep>1?'done':'active');
     document.getElementById('mstep-2').className='mstep '+(modalStep>2?'done':modalStep===2?'active':'upcoming');
@@ -516,41 +688,151 @@
     });
   }
 
-  /* ── DRINK STEP ── */
+  /* ── DRINK STEP — FREESTYLE MACHINE ── */
   function renderDrinkStep(){
-    const brands=Object.keys(DRINKS);
+    currentFlavorBrand=null;
     document.getElementById('modal-body').innerHTML=`
-      <p class="step-label">Pick one drink from the Freestyle machine — or skip.</p>
-      <div class="freestyle-wrap">
-        <div class="brand-tabs">
-          ${brands.map(b=>`<button class="brand-tab ${b===activeBrand?'active':''}" onclick="switchBrand('${b.replace(/'/g,"\\'")}')">${b}</button>`).join('')}
+      <p class="step-label">Tap a brand to see flavors — just like the real Freestyle machine.</p>
+      <div class="freestyle-machine">
+        <div class="machine-screen">
+          <div class="bubbles-field" id="bubbles-field"></div>
+          <div class="flavor-panel" id="flavor-panel">
+            <div class="flavor-panel-header">
+              <button class="flavor-back-btn" onclick="closeFlavors()">← Back</button>
+              <div class="flavor-brand-dot" id="fv-dot"></div>
+              <div class="flavor-brand-name" id="fv-name"></div>
+            </div>
+            <div class="flavor-bubbles-wrap">
+              <div class="flavor-bubbles-field" id="flavor-bubbles-field"></div>
+            </div>
+          </div>
         </div>
-        <div class="drinks-grid">
-          ${DRINKS[activeBrand].map(d=>`
-            <div class="drink-card ${drinkSelection&&drinkSelection.id===d.id?'selected':''}" onclick="selectDrink('${d.id}','${d.name.replace(/'/g,"\\'")}','${d.color}')">
-              <div class="drink-selected-badge"><svg viewBox="0 0 10 10" fill="none"><polyline points="1,5 4,8 9,2" stroke="#fff" stroke-width="2.5"/></svg></div>
-              <div class="drink-color" style="background:${d.color}"></div>
-              <div class="drink-name">${d.name}</div>
-            </div>`).join('')}
+        <div class="machine-bottom-bar">
+          <div class="machine-filter-tabs">
+            <button class="mft active">All Drinks</button>
+          </div>
+          <div class="machine-selected-preview" id="machine-preview" style="display:none"></div>
         </div>
-        ${drinkSelection?`<div class="selected-drink-preview"><div class="sdp-dot" style="background:${drinkSelection.color}"></div><div class="sdp-name">${drinkSelection.name}</div><button class="sdp-clear" onclick="clearDrink()">×</button></div>`:''}
-        <div class="ice-row">
-          <button class="ice-opt ${iceChoice==='ice'?'active':''}"       onclick="setIce(this,'ice')">🧊 Ice</button>
+        <div class="ice-row" id="ice-row" style="display:${drinkSelection&&!noDrink?'flex':'none'}">
+          <button class="ice-opt ${iceChoice==='ice'?'active':''}" onclick="setIce(this,'ice')">🧊 Ice</button>
           <button class="ice-opt ${iceChoice==='light-ice'?'active':''}" onclick="setIce(this,'light-ice')">🧊 Light Ice</button>
-          <button class="ice-opt ${iceChoice==='no-ice'?'active':''}"    onclick="setIce(this,'no-ice')">🚫 No Ice</button>
+          <button class="ice-opt ${iceChoice==='no-ice'?'active':''}" onclick="setIce(this,'no-ice')">🚫 No Ice</button>
         </div>
         <div class="no-drink-row">
-          <button class="no-drink-btn ${noDrink?'active':''}" onclick="toggleNoDrink()">
+          <button class="no-drink-btn ${noDrink?'active':''}" id="no-drink-btn" onclick="toggleNoDrink()">
             ${noDrink?'✓ No drink — confirmed':'No drink for me'}
           </button>
         </div>
       </div>`;
+    renderBrandBubbles();
+    updateMachinePreview();
   }
 
-  function switchBrand(b){activeBrand=b;renderDrinkStep();}
-  function selectDrink(id,name,color){noDrink=false;drinkSelection={id,name,color};renderDrinkStep();}
-  function clearDrink(){drinkSelection=null;renderDrinkStep();}
-  function toggleNoDrink(){noDrink=!noDrink;if(noDrink)drinkSelection=null;renderDrinkStep();}
+  function renderBrandBubbles(){
+    const field=document.getElementById('bubbles-field');
+    if(!field)return;
+    field.innerHTML='';
+    BRANDS.forEach(function(brand){
+      const pos=BRAND_POSITIONS.find(p=>p.id===brand.id)||{x:50,y:50};
+      const size=brand.size||54;
+      const isSelected=drinkSelection&&drinkSelection.brandId===brand.id;
+      const div=document.createElement('div');
+      div.className='brand-bubble'+(isSelected?' selected-brand':'');
+      div.style.cssText=`width:${size}px;height:${size}px;background:${brand.color};left:calc(${pos.x}% - ${size/2}px);top:calc(${pos.y}% - ${size/2}px);`;
+      div.innerHTML=`<span class="b-label" style="color:${brand.textColor||'#fff'}">${brand.name}</span>`;
+      div.addEventListener('click',function(){openFlavors(brand);});
+      field.appendChild(div);
+    });
+  }
+
+  function openFlavors(brand){
+    currentFlavorBrand=brand;
+    document.getElementById('fv-dot').style.background=brand.color;
+    document.getElementById('fv-name').textContent=brand.name;
+    const flavorField=document.getElementById('flavor-bubbles-field');
+    flavorField.innerHTML='';
+
+    /* Spread flavors in a nice scattered layout */
+    const count=brand.flavors.length;
+    brand.flavors.forEach(function(flavor,i){
+      const angle=(i/count)*2*Math.PI - Math.PI/2;
+      const radius=count<=4?30:count<=8?35:38;
+      const cx=50+Math.cos(angle)*radius;
+      const cy=50+Math.sin(angle)*radius;
+      const size=count<=4?62:count<=8?54:48;
+      const isSelected=drinkSelection&&drinkSelection.id===flavor.id;
+      const textColor=flavor.textDark?'#111':'#fff';
+      const div=document.createElement('div');
+      div.className='flavor-bubble'+(isSelected?' selected-flavor':'');
+      div.style.cssText=`width:${size}px;height:${size}px;background:${flavor.color};left:calc(${cx}% - ${size/2}px);top:calc(${cy}% - ${size/2}px);`;
+      div.innerHTML=`<span class="f-name" style="color:${textColor}">${flavor.name}</span>${flavor.sub?`<span class="f-sub" style="color:${flavor.textDark?'rgba(0,0,0,0.5)':'rgba(255,255,255,0.7)'}">${flavor.sub}</span>`:''}`;
+      div.addEventListener('click',function(){selectFlavor(flavor,brand);});
+      flavorField.appendChild(div);
+    });
+
+    document.getElementById('flavor-panel').classList.add('open');
+  }
+
+  function closeFlavors(){
+    document.getElementById('flavor-panel').classList.remove('open');
+    currentFlavorBrand=null;
+  }
+
+  function selectFlavor(flavor,brand){
+    if(drinkSelection&&drinkSelection.id===flavor.id){
+      drinkSelection=null;
+    } else {
+      noDrink=false;
+      drinkSelection={...flavor,brandId:brand.id,brandName:brand.name};
+    }
+    /* Re-render flavor bubbles to update selection */
+    openFlavors(brand);
+    renderBrandBubbles();
+    updateMachinePreview();
+    /* Show/hide ice row */
+    const iceRow=document.getElementById('ice-row');
+    if(iceRow)iceRow.style.display=drinkSelection&&!noDrink?'flex':'none';
+    /* Update no-drink btn */
+    const nd=document.getElementById('no-drink-btn');
+    if(nd){nd.className='no-drink-btn'+(noDrink?' active':'');nd.textContent=noDrink?'✓ No drink — confirmed':'No drink for me';}
+  }
+
+  function updateMachinePreview(){
+    const el=document.getElementById('machine-preview');
+    if(!el)return;
+    if(drinkSelection&&!noDrink){
+      el.style.display='flex';
+      el.innerHTML=`<div class="msp-dot" style="background:${drinkSelection.color}"></div><div class="msp-name">${drinkSelection.brandName} · ${drinkSelection.name}</div><button class="msp-clear" onclick="clearDrink()">×</button>`;
+    } else if(noDrink){
+      el.style.display='flex';
+      el.innerHTML=`<div class="msp-name" style="color:#4ade80">✓ No drink</div>`;
+    } else {
+      el.style.display='none';
+    }
+  }
+
+  function clearDrink(){
+    drinkSelection=null;
+    noDrink=false;
+    renderBrandBubbles();
+    updateMachinePreview();
+    const iceRow=document.getElementById('ice-row');
+    if(iceRow)iceRow.style.display='none';
+    const nd=document.getElementById('no-drink-btn');
+    if(nd){nd.className='no-drink-btn';nd.textContent='No drink for me';}
+  }
+
+  function toggleNoDrink(){
+    noDrink=!noDrink;
+    if(noDrink)drinkSelection=null;
+    renderBrandBubbles();
+    updateMachinePreview();
+    const iceRow=document.getElementById('ice-row');
+    if(iceRow)iceRow.style.display='none';
+    const nd=document.getElementById('no-drink-btn');
+    if(nd){nd.className='no-drink-btn'+(noDrink?' active':'');nd.textContent=noDrink?'✓ No drink — confirmed':'No drink for me';}
+  }
+
   function setIce(btn,val){
     iceChoice=val;
     document.querySelectorAll('.ice-opt').forEach(function(b){b.classList.remove('active');});
@@ -565,7 +847,7 @@
       :'<p class="confirm-empty">No sauces</p>';
     const iceLabel={'ice':'🧊 Ice','light-ice':'🧊 Light Ice','no-ice':'🚫 No Ice'}[iceChoice];
     const drinkHtml=drinkSelection
-      ?`<div class="confirm-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:${drinkSelection.color};display:inline-block;flex-shrink:0"></span>${drinkSelection.name}</span><span>${iceLabel}</span></div>`
+      ?`<div class="confirm-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:${drinkSelection.color};display:inline-block;flex-shrink:0"></span>${drinkSelection.brandName} · ${drinkSelection.name}</span><span>${iceLabel}</span></div>`
       :'<p class="confirm-empty">No drink</p>';
     document.getElementById('modal-body').innerHTML=`
       <div class="confirm-wrap">
@@ -587,7 +869,7 @@
   function buildExtrasString(){
     const sauces=Object.entries(sauceSelections).map(([id,qty])=>{const s=SAUCES.find(x=>x.id===id);return`${s.name} x${qty}`;}).join(', ')||'None';
     const iceLabel={'ice':'Ice','light-ice':'Light Ice','no-ice':'No Ice'}[iceChoice];
-    const drink=drinkSelection?`${drinkSelection.name} (${iceLabel})`:'None';
+    const drink=drinkSelection?`${drinkSelection.brandName} ${drinkSelection.name} (${iceLabel})`:'None';
     return{sauces,drink};
   }
 
