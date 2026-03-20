@@ -11,8 +11,14 @@
     body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--black);}
 
     nav{background:var(--black);display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:100;}
-    .logo{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:2px;}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:2px;cursor:pointer;user-select:none;}
     .logo span{color:var(--red-light);}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .wait-badge{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.12);border-radius:20px;padding:6px 14px;}
+    .wait-badge .wait-icon{font-size:13px;}
+    .wait-badge .wait-text{font-size:12px;color:rgba(255,255,255,0.6);}
+    .wait-badge .wait-num{font-size:12px;color:#fff;font-weight:700;}
+    .wait-badge.hidden-badge{display:none;}
     .nav-pill{border-radius:20px;padding:6px 14px;display:flex;align-items:center;gap:6px;transition:all 0.3s;}
     .nav-pill.open{background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.35);}
     .nav-pill.closed{background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);}
@@ -22,6 +28,15 @@
     @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
     .nav-pill span{font-size:12px;color:rgba(255,255,255,0.8);}
     .nav-pill strong{color:#fff;}
+
+    /* ── WAIT TIME BANNER ── */
+    .wait-banner{background:linear-gradient(90deg,#1a0a09,#2d1210);border-bottom:0.5px solid rgba(192,57,43,0.3);padding:10px 32px;display:flex;align-items:center;gap:12px;}
+    .wait-banner.hidden{display:none;}
+    .wb-icon{font-size:18px;}
+    .wb-text{font-size:13px;color:rgba(255,255,255,0.7);}
+    .wb-text strong{color:#fff;}
+    .wb-mins{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--red-light);letter-spacing:1px;margin-left:4px;}
+    .wb-mins-label{font-size:11px;color:rgba(255,255,255,0.4);margin-left:2px;}
 
     .hero{background:var(--black);padding:64px 32px 56px;display:flex;gap:48px;align-items:center;position:relative;overflow:hidden;}
     .hero::before{content:'';position:absolute;right:-80px;top:-80px;width:320px;height:320px;background:var(--red);border-radius:50%;opacity:0.07;}
@@ -71,27 +86,12 @@
     /* ── ORDER SECTION ── */
     .form-sec{background:var(--white);border-top:0.5px solid var(--border);}
     .form-sec-inner-wrap{position:relative;}
-
-    /* blur overlay when closed */
-    .closed-overlay{
-      display:none;
-      position:absolute;
-      inset:0;
-      z-index:10;
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      background:rgba(17,17,17,0.55);
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:2rem;
-    }
+    .closed-overlay{display:none;position:absolute;inset:0;z-index:10;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);background:rgba(17,17,17,0.55);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;}
     .closed-overlay.visible{display:flex;}
     .overlay-emoji{font-size:56px;margin-bottom:16px;line-height:1;}
     .overlay-title{font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;letter-spacing:2px;line-height:1;margin-bottom:12px;}
     .overlay-sub{font-size:15px;color:rgba(255,255,255,0.6);max-width:340px;line-height:1.6;}
-    .overlay-next{margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif;}
+    .overlay-next{margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4);}
     .overlay-next strong{color:rgba(255,255,255,0.7);}
 
     .form-inner{display:grid;grid-template-columns:1.2fr 1fr;}
@@ -129,12 +129,55 @@
     .fee-note p{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;}
     .fee-note strong{color:var(--red-light);}
     .contact-links{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
-    .clink{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;}
+    .clink{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;text-decoration:none;}
     .clink span{font-size:13px;color:rgba(255,255,255,0.8);}
+    .clink:hover{background:rgba(255,255,255,0.09);}
 
     footer{background:#0a0a0a;padding:22px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
     footer .logo{font-size:18px;}
     footer p{font-size:12px;color:rgba(255,255,255,0.25);}
+
+    /* ── CONFIRMATION MODAL ── */
+    .modal-backdrop{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
+    .modal-backdrop.visible{display:flex;}
+    .modal{background:#fff;border-radius:20px;padding:40px 36px;max-width:420px;width:100%;text-align:center;position:relative;animation:modalPop 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+    @keyframes modalPop{from{transform:scale(0.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+    .modal-check{width:72px;height:72px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+    .modal-check svg{width:36px;height:36px;}
+    .modal-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--black);margin-bottom:10px;}
+    .modal-sub{font-size:14px;color:#666;line-height:1.65;margin-bottom:24px;}
+    .modal-eta{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--surface);border-radius:12px;padding:16px 20px;margin-bottom:24px;}
+    .modal-eta-icon{font-size:24px;}
+    .modal-eta-text{text-align:left;}
+    .modal-eta-text strong{display:block;font-size:15px;color:var(--black);}
+    .modal-eta-text span{font-size:12px;color:#999;}
+    .modal-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;text-align:left;}
+    .mstep{display:flex;align-items:flex-start;gap:12px;}
+    .mstep-dot{width:22px;height:22px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .mstep-dot span{font-size:10px;color:#fff;font-weight:700;}
+    .mstep-text strong{display:block;font-size:13px;color:var(--black);}
+    .mstep-text p{font-size:12px;color:#999;margin-top:2px;}
+    .modal-close{background:var(--red);color:#fff;border:none;width:100%;padding:13px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
+    .modal-close:hover{background:#a93226;}
+
+    /* ── ADMIN PANEL ── */
+    .admin-fab{position:fixed;bottom:24px;right:24px;z-index:150;background:var(--black);color:#fff;border:none;width:52px;height:52px;border-radius:50%;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:transform 0.2s;}
+    .admin-fab.visible{display:flex;}
+    .admin-fab:hover{transform:scale(1.1);}
+    .admin-panel{position:fixed;bottom:90px;right:24px;z-index:150;background:var(--black);border:0.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:20px;width:240px;display:none;box-shadow:0 8px 40px rgba(0,0,0,0.5);}
+    .admin-panel.visible{display:block;animation:slideUp 0.25s ease;}
+    @keyframes slideUp{from{transform:translateY(12px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    .ap-title{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:1px;margin-bottom:14px;}
+    .ap-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .ap-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);}
+    .ap-input-row{display:flex;gap:8px;align-items:center;}
+    .ap-input{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:14px;width:80px;outline:none;}
+    .ap-input:focus{border-color:var(--red-light);}
+    .ap-unit{font-size:12px;color:rgba(255,255,255,0.4);}
+    .ap-btn{background:var(--red);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;width:100%;}
+    .ap-btn:hover{background:#a93226;}
+    .ap-clear{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:0.5px solid rgba(255,255,255,0.1);padding:7px 14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;width:100%;margin-top:6px;}
+    .ap-status{font-size:11px;color:rgba(74,222,128,0.8);margin-top:8px;text-align:center;min-height:16px;}
 
     @media(max-width:768px){
       .hero{flex-direction:column;padding:40px 20px;}
@@ -147,18 +190,31 @@
       .frow{grid-template-columns:1fr;}
       .strip{justify-content:flex-start;}
       .overlay-title{font-size:36px;}
+      .modal{padding:28px 20px;}
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <div class="logo">G<span>&</span>T's <span style="color:rgba(255,255,255,0.35);font-size:18px;">✕</span> Delivery</div>
-    <div class="nav-pill closed" id="nav-pill">
-      <div class="dot"></div>
-      <span id="nav-text"><strong>checking...</strong></span>
+    <div class="logo" id="logo-tap">G<span>&</span>T's <span style="color:rgba(255,255,255,0.35);font-size:18px;">✕</span> Delivery</div>
+    <div class="nav-right">
+      <div class="wait-badge hidden-badge" id="nav-wait-badge">
+        <span class="wait-icon">⏱</span>
+        <span class="wait-text">Est. wait: <span class="wait-num" id="nav-wait-num">—</span> min</span>
+      </div>
+      <div class="nav-pill closed" id="nav-pill">
+        <div class="dot"></div>
+        <span id="nav-text"><strong>checking...</strong></span>
+      </div>
     </div>
   </nav>
+
+  <!-- wait time banner -->
+  <div class="wait-banner hidden" id="wait-banner">
+    <span class="wb-icon">⏱</span>
+    <span class="wb-text">Current estimated wait: <span class="wb-mins" id="banner-wait-num">—</span><span class="wb-mins-label">min</span></span>
+  </div>
 
   <section class="hero">
     <div class="hero-left">
@@ -248,8 +304,6 @@
 
   <section class="form-sec" id="order">
     <div class="form-sec-inner-wrap">
-
-      <!-- CLOSED OVERLAY -->
       <div class="closed-overlay" id="closed-overlay">
         <div class="overlay-emoji">🚶</div>
         <div class="overlay-title">I guess you'll have<br>to walk today</div>
@@ -266,7 +320,6 @@
               <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Alex" required /></div>
               <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required /></div>
             </div>
-
             <div class="fg">
               <label>Contact Info</label>
               <div class="contact-toggle">
@@ -280,7 +333,6 @@
                 <input type="tel" name="phone" id="input-phone" placeholder="(724) 555-0100" disabled />
               </div>
             </div>
-
             <div class="fg">
               <label>Delivery Location</label>
               <div class="loc-stack">
@@ -307,7 +359,7 @@
                   <option>Swanson</option><option>Thompson Hall</option>
                 </select>
                 <div id="sel-greek" class="hidden">
-                  <input type="text" name="greek_house" placeholder="e.g. Sigma Chi, Alpha Phi, Kappa Kappa Gamma..." />
+                  <input type="text" name="greek_house" placeholder="e.g. Sigma Chi, Alpha Phi..." />
                 </div>
                 <select name="other_location" id="sel-other" class="hidden">
                   <option value="">Select location...</option>
@@ -315,9 +367,7 @@
                 </select>
               </div>
             </div>
-
             <div class="fg"><label>G&T's Order Number</label><input type="text" name="order_number" placeholder="e.g. #GT-4821" required /></div>
-
             <div class="fg">
               <label>Payment Method</label>
               <div class="pay-opts">
@@ -327,7 +377,6 @@
               </div>
               <input type="hidden" name="payment_method" id="pay-input" value="Venmo" />
             </div>
-
             <div class="fg"><label>Notes for the runner</label><textarea name="notes" placeholder="Leave at door, call when outside, access code..."></textarea></div>
             <button type="submit" class="submit">Request My Delivery →</button>
           </form>
@@ -355,8 +404,8 @@
           <div class="info-block">
             <div class="ib-label">Payment handles</div>
             <div class="contact-links">
-              <div class="clink"><span>💸 &nbsp;Venmo: coming soon</span></div>
-              <div class="clink"><span>🅿️ &nbsp;PayPal: coming soon</span></div>
+              <a href="https://venmo.com/Vincent-Bertacchi-1" target="_blank" class="clink"><span>💸 &nbsp;Venmo: @Vincent-Bertacchi-1</span></a>
+              <a href="https://paypal.me/VincentBertacchi" target="_blank" class="clink"><span>🅿️ &nbsp;PayPal: paypal.me/VincentBertacchi</span></a>
               <div class="clink"><span>📷 &nbsp;Instagram: coming soon</span></div>
             </div>
           </div>
@@ -370,167 +419,224 @@
     <p>Washington & Jefferson College · Not affiliated with official W&J Dining Services</p>
   </footer>
 
+  <!-- CONFIRMATION MODAL -->
+  <div class="modal-backdrop" id="confirm-modal">
+    <div class="modal">
+      <div class="modal-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <div class="modal-title">Order Received!</div>
+      <div class="modal-sub">We've got your delivery request. Here's what happens next:</div>
+      <div class="modal-eta">
+        <div class="modal-eta-icon">⏱</div>
+        <div class="modal-eta-text">
+          <strong id="modal-wait-line">Expect delivery in ~10 min</strong>
+          <span>From the time your food is ready at G&T's</span>
+        </div>
+      </div>
+      <div class="modal-steps">
+        <div class="mstep">
+          <div class="mstep-dot"><span>1</span></div>
+          <div class="mstep-text"><strong>Runner picks up your order</strong><p>We'll grab it from G&T's as soon as it's ready.</p></div>
+        </div>
+        <div class="mstep">
+          <div class="mstep-dot"><span>2</span></div>
+          <div class="mstep-text"><strong>We'll contact you when on the way</strong><p>Check your email or phone — we'll let you know we're heading over.</p></div>
+        </div>
+        <div class="mstep">
+          <div class="mstep-dot"><span>3</span></div>
+          <div class="mstep-text"><strong>Pay on delivery</strong><p>Have $5 + your food cost ready via Venmo, PayPal, or cash.</p></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">Got it, I'll watch for my food 🍔</button>
+    </div>
+  </div>
+
+  <!-- ADMIN FAB -->
+  <button class="admin-fab" id="admin-fab" onclick="toggleAdminPanel()" title="Admin">⚙️</button>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="admin-panel">
+    <div class="ap-title">⚙️ Admin Panel</div>
+    <div class="ap-row">
+      <div class="ap-label">Set estimated wait time</div>
+      <div class="ap-input-row">
+        <input type="number" class="ap-input" id="ap-wait-input" placeholder="10" min="1" max="120" />
+        <span class="ap-unit">min</span>
+      </div>
+    </div>
+    <button class="ap-btn" onclick="applyWaitTime()">Update Wait Time</button>
+    <button class="ap-clear" onclick="clearWaitTime()">Clear wait time</button>
+    <div class="ap-status" id="ap-status"></div>
+  </div>
+
   <script>
+  // ── SCHEDULE ──
   const SCHEDULE = {
-    0: [12*60,      23*60],      // Sun  12:00pm – 11:00pm
-    1: [11*60,      23*60+30],   // Mon  11:00am – 11:30pm
-    2: [17*60+30,   23*60+30],   // Tue   5:30pm – 11:30pm
-    3: [11*60,      23*60+30],   // Wed  11:00am – 11:30pm
-    4: [17*60+30,   23*60+30],   // Thu   5:30pm – 11:30pm
-    5: [11*60,      23*60+30],   // Fri  11:00am – 11:30pm
-    6: [12*60,      23*60],      // Sat  12:00pm – 11:00pm
+    0:[12*60,23*60],1:[11*60,23*60+30],2:[17*60+30,23*60+30],
+    3:[11*60,23*60+30],4:[17*60+30,23*60+30],5:[11*60,23*60+30],6:[12*60,23*60]
   };
+  const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
-  function getETNow() {
-    return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  function getETNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));}
+  function isOpenNow(){const now=getETNow();const mins=now.getHours()*60+now.getMinutes();const s=SCHEDULE[now.getDay()];return s?mins>=s[0]&&mins<s[1]:false;}
+  function getNextOpen(){
+    const now=getETNow();const day=now.getDay();const mins=now.getHours()*60+now.getMinutes();
+    for(let i=0;i<=7;i++){const d=(day+i)%7;const s=SCHEDULE[d];if(!s)continue;
+      if(i===0&&mins>=s[1])continue;
+      if(i===0&&mins<s[0]){const h=Math.floor(s[0]/60)%12||12;const m=s[0]%60;const ap=s[0]>=720?'PM':'AM';return'today at '+h+(m?':'+String(m).padStart(2,'0'):'')+' '+ap;}
+      if(i>0){const h=Math.floor(s[0]/60)%12||12;const m=s[0]%60;const ap=s[0]>=720?'PM':'AM';const lbl=i===1?'tomorrow':DAY_NAMES[d];return lbl+' at '+h+(m?':'+String(m).padStart(2,'0'):'')+' '+ap;}
+    }return'';
   }
 
-  function isOpenNow() {
-    const now = getETNow();
-    const mins = now.getHours() * 60 + now.getMinutes();
-    const s = SCHEDULE[now.getDay()];
-    return s ? mins >= s[0] && mins < s[1] : false;
+  function updateBadge(){
+    const pill=document.getElementById('nav-pill');
+    const text=document.getElementById('nav-text');
+    const overlay=document.getElementById('closed-overlay');
+    const overlayNext=document.getElementById('overlay-next');
+    const open=isOpenNow();
+    if(open){pill.className='nav-pill open';text.innerHTML='Delivery <strong>available now</strong>';overlay.classList.remove('visible');}
+    else{pill.className='nav-pill closed';const next=getNextOpen();text.innerHTML=next?'Opens <strong>'+next+'</strong>':'Delivery <strong>closed</strong>';overlay.classList.add('visible');overlayNext.innerHTML=next?'We open <strong>'+next+'</strong>':'';}
   }
-
-  function getNextOpen() {
-    const now = getETNow();
-    const day = now.getDay();
-    const mins = now.getHours() * 60 + now.getMinutes();
-    for (let i = 0; i <= 7; i++) {
-      const d = (day + i) % 7;
-      const s = SCHEDULE[d];
-      if (!s) continue;
-      if (i === 0 && mins >= s[1]) continue;
-      if (i === 0 && mins < s[0]) {
-        const h = Math.floor(s[0] / 60) % 12 || 12;
-        const m = s[0] % 60;
-        const ap = s[0] >= 720 ? 'PM' : 'AM';
-        return 'today at ' + h + (m ? ':' + String(m).padStart(2,'0') : '') + ' ' + ap;
-      }
-      if (i > 0) {
-        const h = Math.floor(s[0] / 60) % 12 || 12;
-        const m = s[0] % 60;
-        const ap = s[0] >= 720 ? 'PM' : 'AM';
-        const lbl = i === 1 ? 'tomorrow' : DAY_NAMES[d];
-        return lbl + ' at ' + h + (m ? ':' + String(m).padStart(2,'0') : '') + ' ' + ap;
-      }
-    }
-    return '';
-  }
-
-  function updateBadge() {
-    const pill = document.getElementById('nav-pill');
-    const text = document.getElementById('nav-text');
-    const overlay = document.getElementById('closed-overlay');
-    const overlayNext = document.getElementById('overlay-next');
-    const open = isOpenNow();
-
-    if (open) {
-      pill.className = 'nav-pill open';
-      text.innerHTML = 'Delivery <strong>available now</strong>';
-      overlay.classList.remove('visible');
-    } else {
-      pill.className = 'nav-pill closed';
-      const next = getNextOpen();
-      text.innerHTML = next ? 'Opens <strong>' + next + '</strong>' : 'Delivery <strong>closed</strong>';
-      overlay.classList.add('visible');
-      overlayNext.innerHTML = next ? 'We open <strong>' + next + '</strong>' : '';
-    }
-  }
-
   updateBadge();
-  setInterval(updateBadge, 60000);
+  setInterval(updateBadge,60000);
 
-  function switchContact(type) {
-    var emailDiv = document.getElementById('contact-email');
-    var phoneDiv = document.getElementById('contact-phone');
-    var emailInput = document.getElementById('input-email');
-    var phoneInput = document.getElementById('input-phone');
-    var btns = document.querySelectorAll('.ct-btn');
-    if (type === 'email') {
-      emailDiv.classList.remove('hidden'); phoneDiv.classList.add('hidden');
-      emailInput.required = true; emailInput.disabled = false;
-      phoneInput.required = false; phoneInput.disabled = true;
-      btns[0].classList.add('active'); btns[1].classList.remove('active');
+  // ── WAIT TIME ──
+  let currentWaitMins = null;
+
+  function setWaitUI(mins){
+    const banner=document.getElementById('wait-banner');
+    const bannerNum=document.getElementById('banner-wait-num');
+    const navBadge=document.getElementById('nav-wait-badge');
+    const navNum=document.getElementById('nav-wait-num');
+    const modalLine=document.getElementById('modal-wait-line');
+    if(mins){
+      bannerNum.textContent=mins;
+      navNum.textContent=mins;
+      banner.classList.remove('hidden');
+      navBadge.classList.remove('hidden-badge');
+      modalLine.textContent='Expect delivery in ~'+mins+' min';
     } else {
-      phoneDiv.classList.remove('hidden'); emailDiv.classList.add('hidden');
-      phoneInput.required = true; phoneInput.disabled = false;
-      emailInput.required = false; emailInput.disabled = true;
-      btns[1].classList.add('active'); btns[0].classList.remove('active');
+      banner.classList.add('hidden');
+      navBadge.classList.add('hidden-badge');
+      modalLine.textContent='Expect delivery in ~10 min';
     }
   }
 
-  function updateLocation() {
-    var type = document.getElementById('loc-type').value;
-    var ids = ['sel-dorm','sel-academic','sel-greek','sel-other'];
-    ids.forEach(function(id) { document.getElementById(id).classList.add('hidden'); });
-    if (type === 'dorm') document.getElementById('sel-dorm').classList.remove('hidden');
-    else if (type === 'academic') document.getElementById('sel-academic').classList.remove('hidden');
-    else if (type === 'greek') document.getElementById('sel-greek').classList.remove('hidden');
-    else if (type === 'other') document.getElementById('sel-other').classList.remove('hidden');
+  // ── ADMIN: logo tap 5x ──
+  let logoTaps=0;let logoTimer=null;
+  document.getElementById('logo-tap').addEventListener('click',function(){
+    logoTaps++;
+    clearTimeout(logoTimer);
+    logoTimer=setTimeout(()=>{logoTaps=0;},2000);
+    if(logoTaps>=5){
+      logoTaps=0;
+      document.getElementById('admin-fab').classList.add('visible');
+      document.getElementById('admin-fab').style.animation='none';
+      setTimeout(()=>{
+        // flash it
+        document.getElementById('admin-fab').style.transform='scale(1.3)';
+        setTimeout(()=>{document.getElementById('admin-fab').style.transform='';},300);
+      },10);
+    }
+  });
+
+  function toggleAdminPanel(){
+    const p=document.getElementById('admin-panel');
+    p.classList.toggle('visible');
+    if(p.classList.contains('visible')&&currentWaitMins){
+      document.getElementById('ap-wait-input').value=currentWaitMins;
+    }
   }
 
-  function selectPay(el, method) {
-    document.querySelectorAll('.pay-opt').forEach(function(o) { o.classList.remove('active'); });
+  function applyWaitTime(){
+    const val=parseInt(document.getElementById('ap-wait-input').value);
+    if(!val||val<1){document.getElementById('ap-status').textContent='Enter a valid number.';return;}
+    currentWaitMins=val;
+    setWaitUI(val);
+    document.getElementById('ap-status').textContent='✓ Updated to '+val+' min';
+    setTimeout(()=>{document.getElementById('ap-status').textContent='';},3000);
+  }
+
+  function clearWaitTime(){
+    currentWaitMins=null;
+    setWaitUI(null);
+    document.getElementById('ap-wait-input').value='';
+    document.getElementById('ap-status').textContent='Wait time cleared.';
+    setTimeout(()=>{document.getElementById('ap-status').textContent='';},2000);
+  }
+
+  // ── MODAL ──
+  function closeModal(){document.getElementById('confirm-modal').classList.remove('visible');}
+  document.getElementById('confirm-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+  // ── FORM ──
+  function switchContact(type){
+    var ed=document.getElementById('contact-email'),pd=document.getElementById('contact-phone');
+    var ei=document.getElementById('input-email'),pi=document.getElementById('input-phone');
+    var btns=document.querySelectorAll('.ct-btn');
+    if(type==='email'){ed.classList.remove('hidden');pd.classList.add('hidden');ei.required=true;ei.disabled=false;pi.required=false;pi.disabled=true;btns[0].classList.add('active');btns[1].classList.remove('active');}
+    else{pd.classList.remove('hidden');ed.classList.add('hidden');pi.required=true;pi.disabled=false;ei.required=false;ei.disabled=true;btns[1].classList.add('active');btns[0].classList.remove('active');}
+  }
+
+  function updateLocation(){
+    var type=document.getElementById('loc-type').value;
+    ['sel-dorm','sel-academic','sel-greek','sel-other'].forEach(function(id){document.getElementById(id).classList.add('hidden');});
+    if(type==='dorm')document.getElementById('sel-dorm').classList.remove('hidden');
+    else if(type==='academic')document.getElementById('sel-academic').classList.remove('hidden');
+    else if(type==='greek')document.getElementById('sel-greek').classList.remove('hidden');
+    else if(type==='other')document.getElementById('sel-other').classList.remove('hidden');
+  }
+
+  function selectPay(el,method){
+    document.querySelectorAll('.pay-opt').forEach(function(o){o.classList.remove('active');});
     el.classList.add('active');
-    document.getElementById('pay-input').value = method;
+    document.getElementById('pay-input').value=method;
   }
 
-  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484220220141998113/jUqrHMPmFPm07MoLrc4MaqZH4D7WMcocpHhrLVieL9pGV019Gjo_zoaoqn95K5UB-yIo';
+  const DISCORD_WEBHOOK='https://discord.com/api/webhooks/1484220220141998113/jUqrHMPmFPm07MoLrc4MaqZH4D7WMcocpHhrLVieL9pGV019Gjo_zoaoqn95K5UB-yIo';
 
-  document.getElementById('order-form').addEventListener('submit', async function(e) {
+  document.getElementById('order-form').addEventListener('submit',async function(e){
     e.preventDefault();
-    const btn = this.querySelector('.submit');
-    btn.textContent = 'Sending...';
-    btn.disabled = true;
+    const btn=this.querySelector('.submit');
+    btn.textContent='Sending...';btn.disabled=true;
+    const data=new FormData(this);
+    const building=data.get('dorm')||data.get('academic_building')||data.get('greek_house')||data.get('other_location')||data.get('location_type')||'—';
+    const emailInput=document.getElementById('input-email');
+    const contactLabel=emailInput.disabled?'📱 Phone':'📧 Email';
+    const contactValue=emailInput.disabled?(data.get('phone')||'—'):(data.get('email')||'—');
+    const now=new Date().toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'short',timeStyle:'short'});
+    const waitNote=currentWaitMins?'⏱ Current wait: ~'+currentWaitMins+' min':'⏱ No wait time set';
 
-    const data = new FormData(this);
-    const building = data.get('dorm') || data.get('academic_building') || data.get('greek_house') || data.get('other_location') || data.get('location_type') || '—';
-    const emailInput = document.getElementById('input-email');
-    const contactLabel = emailInput.disabled ? '📱 Phone' : '📧 Email';
-    const contactValue = emailInput.disabled ? (data.get('phone') || '—') : (data.get('email') || '—');
+    const formspreePromise=fetch('https://formspree.io/f/mwvryqar',{method:'POST',body:data,headers:{'Accept':'application/json'}});
+    const discordPromise=fetch(DISCORD_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      content:'🛵 **NEW DELIVERY ORDER!**',
+      embeds:[{color:0xC0392B,title:'Order from '+data.get('first_name')+' '+data.get('last_name'),
+        fields:[
+          {name:'📦 G&T\'s Order #',value:data.get('order_number')||'—',inline:true},
+          {name:'💳 Payment',value:data.get('payment_method')||'—',inline:true},
+          {name:'📍 Deliver To',value:building,inline:false},
+          {name:contactLabel,value:contactValue,inline:true},
+          {name:'📝 Notes',value:data.get('notes')||'None',inline:false},
+          {name:'⏱ Wait Time',value:waitNote,inline:false},
+        ],footer:{text:'Submitted at '+now}
+      }]
+    })});
 
-    const now = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' });
-
-    const formspreePromise = fetch('https://formspree.io/f/mwvryqar', {
-      method: 'POST', body: data, headers: { 'Accept': 'application/json' }
-    });
-
-    const discordPromise = fetch(DISCORD_WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content: '🛵 **NEW DELIVERY ORDER!**',
-        embeds: [{
-          color: 0xC0392B,
-          title: 'Order from ' + data.get('first_name') + ' ' + data.get('last_name'),
-          fields: [
-            { name: '📦 G&T\'s Order #', value: data.get('order_number') || '—', inline: true },
-            { name: '💳 Payment', value: data.get('payment_method') || '—', inline: true },
-            { name: '📍 Deliver To', value: building, inline: false },
-            { name: contactLabel, value: contactValue, inline: true },
-            { name: '📝 Notes', value: data.get('notes') || 'None', inline: false },
-          ],
-          footer: { text: 'Submitted at ' + now }
-        }]
-      })
-    });
-
-    try {
-      await Promise.all([formspreePromise, discordPromise]);
-      btn.textContent = '✅ Order Received!';
-      btn.style.background = '#27ae60';
-      this.reset();
-      switchContact('email');
-      document.querySelectorAll('.pay-opt').forEach(function(o) { o.classList.remove('active'); });
+    try{
+      await Promise.all([formspreePromise,discordPromise]);
+      btn.textContent='✅ Order Received!';btn.style.background='#27ae60';
+      // show confirmation modal
+      document.getElementById('confirm-modal').classList.add('visible');
+      this.reset();switchContact('email');
+      document.querySelectorAll('.pay-opt').forEach(function(o){o.classList.remove('active');});
       document.querySelector('.pay-opt').classList.add('active');
-      document.getElementById('pay-input').value = 'Venmo';
-    } catch(err) {
-      btn.textContent = 'Something went wrong — try again';
-      btn.style.background = '#e74c3c';
-      btn.disabled = false;
+      document.getElementById('pay-input').value='Venmo';
+      setTimeout(()=>{btn.textContent='Request My Delivery →';btn.style.background='';btn.disabled=false;},4000);
+    }catch(err){
+      btn.textContent='Something went wrong — try again';btn.style.background='#e74c3c';btn.disabled=false;
     }
   });
   </script>
