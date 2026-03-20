@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-const SCHEDULE_FILE = './schedule.json';
+const SCHEDULE_FILE = '/app/data/schedule.json';
 
 function loadSchedule() {
   if (!fs.existsSync(SCHEDULE_FILE)) {
