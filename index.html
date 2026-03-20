@@ -129,6 +129,9 @@
     .modal-close:hover{background:#3a2a2a;color:#fff;}
     .modal-body{padding:24px 28px;overflow-y:auto;flex:1;}
     .modal-footer{padding:16px 28px;border-top:1px solid #2a2020;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+    .modal-footer-left{display:flex;gap:8px;}
+    .modal-back{background:transparent;border:1px solid #2a2020;color:#6b6060;padding:10px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;}
+    .modal-back:hover{border-color:#9c8f8f;color:#9c8f8f;}
     .modal-skip{background:transparent;border:1px solid #2a2020;color:#6b6060;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
     .modal-skip:hover{border-color:#9c8f8f;color:#9c8f8f;}
     .modal-next{background:var(--red);border:none;color:#fff;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;gap:6px;}
@@ -151,11 +154,11 @@
     .sauce-card:hover .sauce-emoji{transform:scale(1.18) rotate(-5deg);}
     .sauce-card.selected .sauce-emoji{transform:scale(1.1);}
     .sauce-name{font-size:12px;font-weight:600;color:#f0ebe8;margin-bottom:10px;}
-    .sauce-qty{display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity 0.2s;pointer-events:none;}
-    .sauce-card.selected .sauce-qty{opacity:1;pointer-events:all;}
-    .qty-btn{width:24px;height:24px;border-radius:50%;border:1px solid #3a2020;background:#2a2020;color:#f0ebe8;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.15s;flex-shrink:0;}
+    .sauce-qty{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:4px;height:32px;opacity:0;transition:opacity 0.2s;pointer-events:none;}
+    .sauce-card.selected .sauce-qty{opacity:1;pointer-events:none;/* parent handles, buttons override */}
+    .qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid #3a2020;background:#2a2020;color:#f0ebe8;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.15s;flex-shrink:0;pointer-events:all;-webkit-user-select:none;user-select:none;}
     .qty-btn:hover{background:var(--red);border-color:var(--red);}
-    .qty-val{font-size:13px;font-weight:700;color:#fff;min-width:14px;text-align:center;}
+    .qty-val{font-size:14px;font-weight:700;color:#fff;min-width:18px;text-align:center;}
     .sauce-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;}
     .sauce-card.selected .sauce-check{opacity:1;transform:scale(1);}
     .sauce-check svg{width:10px;height:10px;stroke:#fff;stroke-width:2.5;}
@@ -178,10 +181,6 @@
     .drink-selected-badge{position:absolute;top:5px;right:5px;width:14px;height:14px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;}
     .drink-card.selected .drink-selected-badge{opacity:1;transform:scale(1);}
     .drink-selected-badge svg{width:8px;height:8px;stroke:#fff;stroke-width:3;}
-    .drink-size-row{display:flex;gap:8px;margin-top:4px;}
-    .size-opt{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid #2a2020;background:transparent;color:#6b6060;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;}
-    .size-opt:hover{border-color:#9c8f8f;color:#9c8f8f;}
-    .size-opt.active{border-color:var(--red);background:rgba(192,57,43,0.12);color:#fff;}
     .selected-drink-preview{background:#1a1414;border:1px solid #2a2020;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-top:4px;}
     .sdp-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;}
     .sdp-info{flex:1;}
@@ -298,8 +297,8 @@
           <h2 style="margin-bottom:28px;">Where should we bring it?</h2>
           <form id="order-form" class="form-grid">
             <div class="frow">
-              <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Alex" required /></div>
-              <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required /></div>
+              <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Thomas" required /></div>
+              <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Jefferson" required /></div>
             </div>
             <div class="fg">
               <label>Contact Info</label>
@@ -403,11 +402,12 @@
       <div class="modal-body" id="modal-body">
         <!-- injected by JS -->
       </div>
-      <div class="modal-footer">
-        <button class="modal-skip" id="modal-skip-btn" onclick="skipStep()">Skip</button>
-        <button class="modal-next" id="modal-next-btn" onclick="nextStep()">
-          Next: Pick a drink <span>→</span>
-        </button>
+      <div class="modal-footer" id="modal-footer">
+        <div class="modal-footer-left">
+          <button class="modal-back" id="modal-back-btn" onclick="backStep()" style="display:none">← Back</button>
+          <button class="modal-skip" id="modal-skip-btn" onclick="skipStep()">Skip</button>
+        </div>
+        <button class="modal-next" id="modal-next-btn" onclick="nextStep()">Next: Pick a drink <span>→</span></button>
       </div>
     </div>
   </div>
@@ -486,15 +486,13 @@
     ],
   };
 
-  const SIZES = ['Sm', 'Md', 'Lg'];
-
   /* ─── MODAL STATE ────────────────────────────────── */
   let modalStep = 1; // 1=sauce, 2=drink, 3=confirm
   let sauceSelections = {}; // { id: qty }
-  let drinkSelection  = null; // { id, name, color, size }
+  let drinkSelection  = null; // { id, name, color }
   let noDrink = false;
   let activeBrand = Object.keys(DRINKS)[0];
-  let pendingOrderData = null; // store form data until modal finishes
+  let pendingOrderData = null;
   let pendingOrderId   = null;
 
   /* ─── MODAL OPEN/CLOSE ───────────────────────────── */
@@ -529,9 +527,14 @@
     const nextBtn = document.getElementById('modal-next-btn');
     const skipBtn = document.getElementById('modal-skip-btn');
 
+    const backBtn = document.getElementById('modal-back-btn');
+
     s1.className = 'mstep ' + (modalStep > 1 ? 'done' : modalStep === 1 ? 'active' : 'upcoming');
     s2.className = 'mstep ' + (modalStep > 2 ? 'done' : modalStep === 2 ? 'active' : 'upcoming');
     s3.className = 'mstep ' + (modalStep === 3 ? 'active' : 'upcoming');
+
+    // Back button: hidden on step 1, visible on steps 2+
+    backBtn.style.display = modalStep > 1 ? '' : 'none';
 
     if (modalStep === 1) {
       title.textContent = 'Pick your sauces';
@@ -555,35 +558,43 @@
       <p class="step-label">Select any sauces you'd like — up to <strong>3 packets each</strong>. Tap a sauce to add it.</p>
       <div class="sauces-grid" id="sauces-grid">
         ${SAUCES.map(s => `
-          <div class="sauce-card ${sauceSelections[s.id] ? 'selected' : ''}" id="sc-${s.id}" onclick="toggleSauce('${s.id}')">
+          <div class="sauce-card ${sauceSelections[s.id] ? 'selected' : ''}" id="sc-${s.id}" data-sauce-id="${s.id}">
             <div class="sauce-check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3"/></svg></div>
             <span class="sauce-emoji">${s.emoji}</span>
             <div class="sauce-name">${s.name}</div>
             <div class="sauce-qty" id="sq-${s.id}">
-              <button class="qty-btn" onclick="event.stopPropagation();changeQty('${s.id}',-1)">−</button>
+              <button class="qty-btn" data-action="dec" data-id="${s.id}">−</button>
               <span class="qty-val" id="qv-${s.id}">${sauceSelections[s.id] || 1}</span>
-              <button class="qty-btn" onclick="event.stopPropagation();changeQty('${s.id}',1)">+</button>
+              <button class="qty-btn" data-action="inc" data-id="${s.id}">+</button>
             </div>
           </div>
         `).join('')}
       </div>`;
-  }
 
-  function toggleSauce(id) {
-    if (sauceSelections[id]) {
-      delete sauceSelections[id];
-      document.getElementById('sc-' + id).classList.remove('selected');
-    } else {
-      sauceSelections[id] = 1;
-      document.getElementById('sc-' + id).classList.add('selected');
-    }
-  }
-
-  function changeQty(id, delta) {
-    if (!sauceSelections[id]) return;
-    const newVal = Math.min(3, Math.max(1, (sauceSelections[id] || 1) + delta));
-    sauceSelections[id] = newVal;
-    document.getElementById('qv-' + id).textContent = newVal;
+    // Single delegated listener on the grid — avoids event bubbling conflicts
+    document.getElementById('sauces-grid').addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-action]');
+      if (btn) {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const delta = btn.dataset.action === 'inc' ? 1 : -1;
+        sauceSelections[id] = Math.min(3, Math.max(1, (sauceSelections[id] || 1) + delta));
+        document.getElementById('qv-' + id).textContent = sauceSelections[id];
+        return;
+      }
+      const card = e.target.closest('.sauce-card');
+      if (card) {
+        const id = card.dataset.sauceId;
+        if (sauceSelections[id]) {
+          delete sauceSelections[id];
+          card.classList.remove('selected');
+        } else {
+          sauceSelections[id] = 1;
+          card.classList.add('selected');
+          document.getElementById('qv-' + id).textContent = 1;
+        }
+      }
+    });
   }
 
   /* ── DRINK STEP ── */
@@ -595,7 +606,7 @@
       <p class="step-label">Pick one drink from the Freestyle machine — or skip if you don't want one.</p>
       <div class="freestyle-wrap">
         <div class="brand-tabs">
-          ${brands.map(b => `<button class="brand-tab ${b === activeBrand ? 'active' : ''}" onclick="switchBrand('${b}')">${b}</button>`).join('')}
+          ${brands.map(b => `<button class="brand-tab ${b === activeBrand ? 'active' : ''}" onclick="switchBrand('${b.replace(/'/g,"\\'")}')">${b}</button>`).join('')}
         </div>
         <div class="drinks-grid" id="drinks-grid">
           ${renderDrinksGrid()}
@@ -605,13 +616,9 @@
           <div class="sdp-dot" style="background:${drinkSelection.color}"></div>
           <div class="sdp-info">
             <div class="sdp-name">${drinkSelection.name}</div>
-            <div class="sdp-size">Size: ${drinkSelection.size}</div>
           </div>
           <button class="sdp-clear" onclick="clearDrink()" title="Remove">×</button>
         </div>` : ''}
-        <div class="drink-size-row" id="drink-size-row" style="${drinkSelection || !document.querySelector('.drink-card.selected') ? '' : ''}">
-          ${SIZES.map(sz => `<button class="size-opt ${drinkSelection && drinkSelection.size === sz ? 'active' : ''}" onclick="selectSize('${sz}')">${sz}</button>`).join('')}
-        </div>
         <div class="no-drink-row">
           <button class="no-drink-btn ${noDrink ? 'active' : ''}" onclick="toggleNoDrink()">
             ${noDrink ? '✓ No drink — confirmed' : 'No drink for me'}
@@ -622,7 +629,7 @@
 
   function renderDrinksGrid() {
     return DRINKS[activeBrand].map(d => `
-      <div class="drink-card ${drinkSelection && drinkSelection.id === d.id ? 'selected' : ''}" id="dk-${d.id}" onclick="selectDrink('${d.id}','${d.name}','${d.color}')">
+      <div class="drink-card ${drinkSelection && drinkSelection.id === d.id ? 'selected' : ''}" id="dk-${d.id}" onclick="selectDrink('${d.id}','${d.name.replace(/'/g,"\\'")}','${d.color}')">
         <div class="drink-selected-badge"><svg viewBox="0 0 10 10" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
         <div class="drink-color" style="background:${d.color}"></div>
         <div class="drink-name">${d.name}</div>
@@ -636,16 +643,8 @@
 
   function selectDrink(id, name, color) {
     noDrink = false;
-    const size = drinkSelection ? drinkSelection.size : 'Md';
-    drinkSelection = { id, name, color, size };
+    drinkSelection = { id, name, color };
     renderDrinkStep();
-  }
-
-  function selectSize(sz) {
-    if (drinkSelection) {
-      drinkSelection.size = sz;
-      renderDrinkStep();
-    }
   }
 
   function clearDrink() {
@@ -672,7 +671,7 @@
       : '<p class="confirm-empty">No sauces</p>';
 
     const drinkHtml = drinkSelection
-      ? `<div class="confirm-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:${drinkSelection.color};display:inline-block"></span>${drinkSelection.name}</span><span>${drinkSelection.size}</span></div>`
+      ? `<div class="confirm-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:${drinkSelection.color};display:inline-block"></span>${drinkSelection.name}</span><span>✓</span></div>`
       : '<p class="confirm-empty">No drink</p>';
 
     body.innerHTML = `
@@ -697,6 +696,13 @@
     }
   }
 
+  function backStep() {
+    if (modalStep > 1) {
+      modalStep--;
+      renderModalStep();
+    }
+  }
+
   function skipStep() {
     if (modalStep === 1) sauceSelections = {};
     if (modalStep === 2) { drinkSelection = null; noDrink = true; }
@@ -715,7 +721,7 @@
       return `${s.name} ×${qty}`;
     }).join(', ') || 'None';
 
-    const drink = drinkSelection ? `${drinkSelection.name} (${drinkSelection.size})` : 'None';
+    const drink = drinkSelection ? drinkSelection.name : 'None';
     return { sauces, drink };
   }
 
