@@ -85,6 +85,11 @@
     .submit:hover{background:#a93226;}
     .hidden{display:none;}
 
+    /* Contact toggle */
+    .contact-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;}
+    .ct-btn{flex:1;padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;background:var(--surface);color:#999;border:none;cursor:pointer;transition:background 0.2s,color 0.2s;letter-spacing:0.3px;}
+    .ct-btn.active{background:var(--red);color:#fff;}
+
     .panel-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:1px;margin-bottom:24px;}
     .info-block{margin-bottom:24px;}
     .ib-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px;}
@@ -141,7 +146,7 @@
   </section>
 
   <div class="strip">
-    <div class="si">🛵 Fixed delivery teamd</div>
+    <div class="si">🛵 Fixed delivery team</div>
     <div class="si">📲 Order on G&T's app first</div>
     <div class="si">📍 All buildings covered</div>
     <div class="si">💸 Venmo · PayPal · Cash</div>
@@ -161,7 +166,7 @@
         <div class="step-n">02</div>
         <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
         <h3>Request delivery here</h3>
-        <p>Fill out the form below with your order number, building, room, and preferred payment method.</p>
+        <p>Fill out the form below with your order number, building, and preferred payment method.</p>
       </div>
       <div class="step">
         <div class="step-n">03</div>
@@ -214,13 +219,26 @@
       <div class="form-left">
         <div class="eyebrow">Delivery request</div>
         <h2 style="margin-bottom:28px;">Where should we bring it?</h2>
-        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="form-grid">
+          <form id="order-form" class="form-grid">
           <div class="frow">
             <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Alex" required /></div>
             <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required /></div>
           </div>
-          <div class="fg"><label>W&J Email</label><input type="email" name="email" placeholder="asmith@washjeff.edu" required /></div>
-          <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="(724) 555-0100" required /></div>
+
+          <!-- Contact toggle: Email OR Phone -->
+          <div class="fg">
+            <label>Contact Info</label>
+            <div class="contact-toggle">
+              <button type="button" class="ct-btn active" onclick="switchContact('email')">📧 Email</button>
+              <button type="button" class="ct-btn" onclick="switchContact('phone')">📱 Phone</button>
+            </div>
+            <div id="contact-email">
+              <input type="email" name="email" id="input-email" placeholder="asmith@washjeff.edu" required />
+            </div>
+            <div id="contact-phone" class="hidden">
+              <input type="tel" name="phone" id="input-phone" placeholder="(724) 555-0100" disabled />
+            </div>
+          </div>
 
           <!-- LOCATION -->
           <div class="fg">
@@ -275,14 +293,11 @@
                 <input type="text" name="greek_house" placeholder="e.g. Sigma Chi, Alpha Phi, Kappa Kappa Gamma..." />
               </div>
 
-              <!-- Other dropdown -->
+              <!-- Other dropdown (Rossin removed) -->
               <select name="other_location" id="sel-other" class="hidden">
                 <option value="">Select location...</option>
-                <option>Rossin Campus Center</option>
                 <option>Other on-campus location</option>
               </select>
-
-              <input type="text" name="room" id="room-input" placeholder="Room / unit number (if applicable)" />
             </div>
           </div>
 
@@ -320,7 +335,6 @@
           <div class="ib-row"><span>All W&J dorms</span><span>✓</span></div>
           <div class="ib-row"><span>Academic buildings</span><span>✓</span></div>
           <div class="ib-row"><span>Frats &amp; sororities</span><span>✓</span></div>
-          <div class="ib-row"><span>Rossin Campus Center</span><span>✓</span></div>
           <div class="ib-row"><span>Off campus</span><span>✗</span></div>
         </div>
         <div class="info-block">
@@ -341,20 +355,130 @@
   </footer>
 
   <script>
-    function updateLocation(){
-      const type=document.getElementById('loc-type').value;
-      const ids=['sel-dorm','sel-academic','sel-greek','sel-other'];
-      ids.forEach(id=>document.getElementById(id).classList.add('hidden'));
-      if(type==='dorm') document.getElementById('sel-dorm').classList.remove('hidden');
-      else if(type==='academic') document.getElementById('sel-academic').classList.remove('hidden');
-      else if(type==='greek') document.getElementById('sel-greek').classList.remove('hidden');
-      else if(type==='other') document.getElementById('sel-other').classList.remove('hidden');
+  // ── Contact toggle ──────────────────────────────────────────────
+  function switchContact(type) {
+    const emailDiv = document.getElementById('contact-email');
+    const phoneDiv = document.getElementById('contact-phone');
+    const emailInput = document.getElementById('input-email');
+    const phoneInput = document.getElementById('input-phone');
+    const btns = document.querySelectorAll('.ct-btn');
+
+    if (type === 'email') {
+      emailDiv.classList.remove('hidden');
+      phoneDiv.classList.add('hidden');
+      emailInput.required = true;
+      emailInput.disabled = false;
+      phoneInput.required = false;
+      phoneInput.disabled = true;
+      btns[0].classList.add('active');
+      btns[1].classList.remove('active');
+    } else {
+      phoneDiv.classList.remove('hidden');
+      emailDiv.classList.add('hidden');
+      phoneInput.required = true;
+      phoneInput.disabled = false;
+      emailInput.required = false;
+      emailInput.disabled = true;
+      btns[1].classList.add('active');
+      btns[0].classList.remove('active');
     }
-    function selectPay(el,method){
+  }
+
+  // ── Location dropdown ───────────────────────────────────────────
+  function updateLocation(){
+    const type=document.getElementById('loc-type').value;
+    const ids=['sel-dorm','sel-academic','sel-greek','sel-other'];
+    ids.forEach(id=>document.getElementById(id).classList.add('hidden'));
+    if(type==='dorm') document.getElementById('sel-dorm').classList.remove('hidden');
+    else if(type==='academic') document.getElementById('sel-academic').classList.remove('hidden');
+    else if(type==='greek') document.getElementById('sel-greek').classList.remove('hidden');
+    else if(type==='other') document.getElementById('sel-other').classList.remove('hidden');
+  }
+
+  function selectPay(el,method){
+    document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('pay-input').value=method;
+  }
+
+  // ─── PASTE YOUR DISCORD WEBHOOK URL HERE ───────────────────────
+  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484220220141998113/jUqrHMPmFPm07MoLrc4MaqZH4D7WMcocpHhrLVieL9pGV019Gjo_zoaoqn95K5UB-yIo';
+  // ───────────────────────────────────────────────────────────────
+
+  document.getElementById('order-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const data = new FormData(this);
+
+    // Build location string
+    const locType = data.get('location_type') || '';
+    const dorm = data.get('dorm') || '';
+    const academic = data.get('academic_building') || '';
+    const greek = data.get('greek_house') || '';
+    const other = data.get('other_location') || '';
+    const building = dorm || academic || greek || other || locType;
+    const location = building;
+
+    // Determine contact info used
+    const emailInput = document.getElementById('input-email');
+    const phoneInput = document.getElementById('input-phone');
+    const contactLabel = emailInput.disabled ? '📱 Phone' : '📧 Email';
+    const contactValue = emailInput.disabled ? (data.get('phone') || '—') : (data.get('email') || '—');
+
+    // Send to Formspree (keeps your email records)
+    const formspreePromise = fetch('https://formspree.io/f/mwvryqar', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    // Send to Discord
+    const now = new Date().toLocaleString('en-US', {
+      timeZone: 'America/New_York',
+      dateStyle: 'short',
+      timeStyle: 'short'
+    });
+
+    const discordPayload = {
+      content: '🛵 **NEW DELIVERY ORDER!**',
+      embeds: [{
+        color: 0xC0392B,
+        title: `Order from ${data.get('first_name')} ${data.get('last_name')}`,
+        fields: [
+          { name: '📦 G&T\'s Order #', value: data.get('order_number') || '—', inline: true },
+          { name: '💳 Payment', value: data.get('payment_method') || '—', inline: true },
+          { name: '📍 Deliver To', value: location || '—', inline: false },
+          { name: contactLabel, value: contactValue, inline: true },
+          { name: '📝 Notes', value: data.get('notes') || 'None', inline: false },
+        ],
+        footer: { text: `Submitted at ${now}` }
+      }]
+    };
+
+    const discordPromise = fetch(DISCORD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(discordPayload)
+    });
+
+    try {
+      await Promise.all([formspreePromise, discordPromise]);
+      btn.textContent = '✅ Order Received!';
+      btn.style.background = '#27ae60';
+      this.reset();
+      switchContact('email');
       document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('pay-input').value=method;
+      document.querySelector('.pay-opt').classList.add('active');
+      document.getElementById('pay-input').value = 'Venmo';
+    } catch(err) {
+      btn.textContent = 'Something went wrong — try again';
+      btn.style.background = '#e74c3c';
+      btn.disabled = false;
     }
-  </script>
+  });
+</script>
 </body>
 </html>
