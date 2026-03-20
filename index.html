@@ -13,8 +13,12 @@
     nav{background:var(--black);display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:100;}
     .logo{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:2px;}
     .logo span{color:var(--red-light);}
-    .nav-pill{background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);border-radius:20px;padding:6px 14px;display:flex;align-items:center;gap:6px;}
-    .dot{width:7px;height:7px;background:#4ade80;border-radius:50%;animation:pulse 1.5s infinite;}
+    .nav-pill{border-radius:20px;padding:6px 14px;display:flex;align-items:center;gap:6px;transition:all 0.3s;}
+    .nav-pill.open{background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.35);}
+    .nav-pill.closed{background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);}
+    .dot{width:7px;height:7px;border-radius:50%;}
+    .nav-pill.open .dot{background:#4ade80;animation:pulse 1.5s infinite;}
+    .nav-pill.closed .dot{background:#e74c3c;animation:none;}
     @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
     .nav-pill span{font-size:12px;color:rgba(255,255,255,0.8);}
     .nav-pill strong{color:#fff;}
@@ -64,7 +68,32 @@
     .ref-item strong{display:block;margin-bottom:2px;}
     .ref-item span{color:#888;}
 
+    /* ── ORDER SECTION ── */
     .form-sec{background:var(--white);border-top:0.5px solid var(--border);}
+    .form-sec-inner-wrap{position:relative;}
+
+    /* blur overlay when closed */
+    .closed-overlay{
+      display:none;
+      position:absolute;
+      inset:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      background:rgba(17,17,17,0.55);
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:2rem;
+    }
+    .closed-overlay.visible{display:flex;}
+    .overlay-emoji{font-size:56px;margin-bottom:16px;line-height:1;}
+    .overlay-title{font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;letter-spacing:2px;line-height:1;margin-bottom:12px;}
+    .overlay-sub{font-size:15px;color:rgba(255,255,255,0.6);max-width:340px;line-height:1.6;}
+    .overlay-next{margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif;}
+    .overlay-next strong{color:rgba(255,255,255,0.7);}
+
     .form-inner{display:grid;grid-template-columns:1.2fr 1fr;}
     .form-left{padding:52px 40px;border-right:0.5px solid var(--border);}
     .form-right{padding:52px 36px;background:var(--black);}
@@ -81,16 +110,13 @@
     .pay-opt.active,.pay-opt:hover{border-color:var(--red);}
     .pay-icon{font-size:20px;margin-bottom:4px;}
     .pay-name{font-size:12px;font-weight:600;color:var(--black);}
-    .submit{background:var(--red);color:#fff;border:none;width:100%;padding:14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .2s;}
+    .submit{background:var(--red);color:#fff;border:none;width:100%;padding:14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;}
     .submit:hover{background:#a93226;}
-    .submit:disabled{background:#999;cursor:not-allowed;}
     .hidden{display:none;}
 
-    /* Success message */
-    .success-msg{display:none;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:12px;padding:20px 24px;text-align:center;margin-top:12px;}
-    .success-msg.show{display:block;}
-    .success-msg h3{font-size:18px;font-weight:700;color:#166534;margin-bottom:6px;}
-    .success-msg p{font-size:13px;color:#166534;opacity:.8;}
+    .contact-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;}
+    .ct-btn{flex:1;padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;background:var(--surface);color:#999;border:none;cursor:pointer;transition:background 0.2s,color 0.2s;letter-spacing:0.3px;}
+    .ct-btn.active{background:var(--red);color:#fff;}
 
     .panel-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:1px;margin-bottom:24px;}
     .info-block{margin-bottom:24px;}
@@ -120,6 +146,7 @@
       .form-right{padding:32px 20px;}
       .frow{grid-template-columns:1fr;}
       .strip{justify-content:flex-start;}
+      .overlay-title{font-size:36px;}
     }
   </style>
 </head>
@@ -127,7 +154,10 @@
 
   <nav>
     <div class="logo">G<span>&</span>T's <span style="color:rgba(255,255,255,0.35);font-size:18px;">✕</span> Delivery</div>
-    <div class="nav-pill"><div class="dot"></div><span>Delivery <strong>available now</strong></span></div>
+    <div class="nav-pill closed" id="nav-pill">
+      <div class="dot"></div>
+      <span id="nav-text"><strong>checking...</strong></span>
+    </div>
   </nav>
 
   <section class="hero">
@@ -168,7 +198,7 @@
         <div class="step-n">02</div>
         <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
         <h3>Request delivery here</h3>
-        <p>Fill out the form below with your order number, building, room, and preferred payment method.</p>
+        <p>Fill out the form below with your order number, building, and preferred payment method.</p>
       </div>
       <div class="step">
         <div class="step-n">03</div>
@@ -187,21 +217,21 @@
         <div class="hday-accent"></div>
         <div class="hday-badge">Available</div>
         <div class="hday-name">Mon · Wed · Fri</div>
-        <div class="hday-time">11:00am – Midnight</div>
+        <div class="hday-time">11:00am – 11:30pm</div>
         <div class="hday-note">Classes end at 11am — delivering all day until G&T's closes.</div>
       </div>
       <div class="hday-card">
         <div class="hday-accent"></div>
         <div class="hday-badge">Available</div>
         <div class="hday-name">Tue · Thu</div>
-        <div class="hday-time">5:30pm – Midnight</div>
+        <div class="hday-time">5:30pm – 11:30pm</div>
         <div class="hday-note">Classes end at 5:30pm — delivering evenings until G&T's closes.</div>
       </div>
       <div class="hday-card">
         <div class="hday-accent"></div>
         <div class="hday-badge">Available</div>
         <div class="hday-name">Sat · Sun</div>
-        <div class="hday-time">11:00am – 11:00pm</div>
+        <div class="hday-time">12:00pm – 11:00pm</div>
         <div class="hday-note">Available all day on weekends until G&T's closes.</div>
       </div>
     </div>
@@ -217,105 +247,118 @@
   </section>
 
   <section class="form-sec" id="order">
-    <div class="form-inner">
-      <div class="form-left">
-        <div class="eyebrow">Delivery request</div>
-        <h2 style="margin-bottom:28px;">Where should we bring it?</h2>
+    <div class="form-sec-inner-wrap">
 
-        <!-- ✅ FORM — submits to Google Sheets via SheetDB -->
-        <form id="delivery-form" class="form-grid">
-          <div class="frow">
-            <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Alex" required /></div>
-            <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required /></div>
-          </div>
-          <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="(724) 555-0100" required /></div>
-
-          <div class="fg">
-            <label>Delivery Location</label>
-            <div class="loc-stack">
-              <select name="location_type" id="loc-type" onchange="updateLocation()" required>
-                <option value="">Select type...</option>
-                <option value="dorm">Dorm</option>
-                <option value="academic">Academic building</option>
-                <option value="greek">Fraternity / Sorority</option>
-                <option value="other">Other location</option>
-              </select>
-              <select name="dorm" id="sel-dorm" class="hidden">
-                <option value="">Select dorm...</option>
-                <option>1970 Hall</option><option>Adams Hall</option><option>Alexander Hall</option>
-                <option>Bica-Ross Hall</option><option>Buchanan Hall</option><option>Cleveland Hall</option>
-                <option>Cooper Hall</option><option>Fillmore Hall</option><option>Jefferson Hall</option>
-                <option>Marshall Hall</option><option>Mellon Hall</option><option>Monroe Hall</option>
-                <option>New Residence Hall</option><option>Penn House</option><option>Reisenman Hall</option>
-                <option>Upperclass Hall</option><option>Wade Hall</option><option>Washington Hall</option>
-              </select>
-              <select name="academic_building" id="sel-academic" class="hidden">
-                <option value="">Select building...</option>
-                <option>Burnett Center</option><option>Clark Family Library</option>
-                <option>Dieter-Porter</option><option>The Hub</option>
-                <option>Olin</option><option>Old Main</option>
-                <option>Swanson</option><option>Thompson Hall</option>
-              </select>
-              <div id="sel-greek" class="hidden">
-                <input type="text" name="greek_house" placeholder="e.g. Sigma Chi, Alpha Phi..." />
-              </div>
-              <select name="other_location" id="sel-other" class="hidden">
-                <option value="">Select location...</option>
-                <option>Rossin Campus Center</option>
-                <option>Other on-campus location</option>
-              </select>
-              <input type="text" name="room" id="room-input" placeholder="Room / unit number (if applicable)" />
-            </div>
-          </div>
-
-          <div class="fg"><label>G&T's Order Number</label><input type="text" name="order_number" placeholder="e.g. #GT-4821" required /></div>
-
-          <div class="fg">
-            <label>Payment Method</label>
-            <div class="pay-opts">
-              <div class="pay-opt active" onclick="selectPay(this,'Venmo')"><div class="pay-icon">💸</div><div class="pay-name">Venmo</div></div>
-              <div class="pay-opt" onclick="selectPay(this,'PayPal')"><div class="pay-icon">🅿️</div><div class="pay-name">PayPal</div></div>
-              <div class="pay-opt" onclick="selectPay(this,'Cash')"><div class="pay-icon">💵</div><div class="pay-name">Cash</div></div>
-            </div>
-            <input type="hidden" name="payment_method" id="pay-input" value="Venmo" />
-          </div>
-
-          <div class="fg"><label>Notes for the runner</label><textarea name="notes" placeholder="Leave at door, call when outside, access code..."></textarea></div>
-          <button type="submit" class="submit" id="submit-btn">Request My Delivery →</button>
-
-          <div class="success-msg" id="success-msg">
-            <h3>🎉 Request received!</h3>
-            <p>Your delivery is on the way. Have $5 ready for the runner!</p>
-          </div>
-        </form>
+      <!-- CLOSED OVERLAY -->
+      <div class="closed-overlay" id="closed-overlay">
+        <div class="overlay-emoji">🚶</div>
+        <div class="overlay-title">I guess you'll have<br>to walk today</div>
+        <div class="overlay-sub">Deliveries are currently closed. Come back during our hours and we'll bring it right to you.</div>
+        <div class="overlay-next" id="overlay-next"></div>
       </div>
 
-      <div class="form-right">
-        <div class="panel-title">Delivery Info</div>
-        <div class="info-block">
-          <div class="ib-label">My delivery hours</div>
-          <div class="ib-row"><span>Mon / Wed / Fri</span><span>11am – Midnight</span></div>
-          <div class="ib-row"><span>Tue / Thu</span><span>5:30pm – Midnight</span></div>
-          <div class="ib-row"><span>Sat / Sun</span><span>11am – 11pm</span></div>
+      <div class="form-inner">
+        <div class="form-left">
+          <div class="eyebrow">Delivery request</div>
+          <h2 style="margin-bottom:28px;">Where should we bring it?</h2>
+          <form id="order-form" class="form-grid">
+            <div class="frow">
+              <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="Alex" required /></div>
+              <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required /></div>
+            </div>
+
+            <div class="fg">
+              <label>Contact Info</label>
+              <div class="contact-toggle">
+                <button type="button" class="ct-btn active" onclick="switchContact('email')">📧 Email</button>
+                <button type="button" class="ct-btn" onclick="switchContact('phone')">📱 Phone</button>
+              </div>
+              <div id="contact-email">
+                <input type="email" name="email" id="input-email" placeholder="asmith@washjeff.edu" required />
+              </div>
+              <div id="contact-phone" class="hidden">
+                <input type="tel" name="phone" id="input-phone" placeholder="(724) 555-0100" disabled />
+              </div>
+            </div>
+
+            <div class="fg">
+              <label>Delivery Location</label>
+              <div class="loc-stack">
+                <select name="location_type" id="loc-type" onchange="updateLocation()" required>
+                  <option value="">Select type...</option>
+                  <option value="dorm">Dorm</option>
+                  <option value="academic">Academic building</option>
+                  <option value="greek">Fraternity / Sorority</option>
+                  <option value="other">Other location</option>
+                </select>
+                <select name="dorm" id="sel-dorm" class="hidden">
+                  <option value="">Select dorm...</option>
+                  <option>1970 Hall</option><option>Adams Hall</option><option>Alexander Hall</option>
+                  <option>Bica-Ross Hall</option><option>Buchanan Hall</option><option>Cleveland Hall</option>
+                  <option>Cooper Hall</option><option>Fillmore Hall</option><option>Jefferson Hall</option>
+                  <option>Marshall Hall</option><option>Mellon Hall</option><option>Monroe Hall</option>
+                  <option>New Residence Hall</option><option>Penn House</option><option>Reisenman Hall</option>
+                  <option>Upperclass Hall</option><option>Wade Hall</option><option>Washington Hall</option>
+                </select>
+                <select name="academic_building" id="sel-academic" class="hidden">
+                  <option value="">Select building...</option>
+                  <option>Burnett Center</option><option>Clark Family Library</option><option>Dieter-Porter</option>
+                  <option>The Hub</option><option>Olin</option><option>Old Main</option>
+                  <option>Swanson</option><option>Thompson Hall</option>
+                </select>
+                <div id="sel-greek" class="hidden">
+                  <input type="text" name="greek_house" placeholder="e.g. Sigma Chi, Alpha Phi, Kappa Kappa Gamma..." />
+                </div>
+                <select name="other_location" id="sel-other" class="hidden">
+                  <option value="">Select location...</option>
+                  <option>Other on-campus location</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="fg"><label>G&T's Order Number</label><input type="text" name="order_number" placeholder="e.g. #GT-4821" required /></div>
+
+            <div class="fg">
+              <label>Payment Method</label>
+              <div class="pay-opts">
+                <div class="pay-opt active" onclick="selectPay(this,'Venmo')"><div class="pay-icon">💸</div><div class="pay-name">Venmo</div></div>
+                <div class="pay-opt" onclick="selectPay(this,'PayPal')"><div class="pay-icon">🅿️</div><div class="pay-name">PayPal</div></div>
+                <div class="pay-opt" onclick="selectPay(this,'Cash')"><div class="pay-icon">💵</div><div class="pay-name">Cash</div></div>
+              </div>
+              <input type="hidden" name="payment_method" id="pay-input" value="Venmo" />
+            </div>
+
+            <div class="fg"><label>Notes for the runner</label><textarea name="notes" placeholder="Leave at door, call when outside, access code..."></textarea></div>
+            <button type="submit" class="submit">Request My Delivery →</button>
+          </form>
         </div>
-        <div class="info-block">
-          <div class="ib-label">Delivery Fee</div>
-          <div class="fee-note"><p>A small delivery fee applies per order. Have <strong>$5 ready</strong> for the runner.</p></div>
-        </div>
-        <div class="info-block">
-          <div class="ib-label">Coverage</div>
-          <div class="ib-row"><span>All W&J dorms</span><span>✓</span></div>
-          <div class="ib-row"><span>Academic buildings</span><span>✓</span></div>
-          <div class="ib-row"><span>Frats &amp; sororities</span><span>✓</span></div>
-          <div class="ib-row"><span>Rossin Campus Center</span><span>✓</span></div>
-          <div class="ib-row"><span>Off campus</span><span>✗</span></div>
-        </div>
-        <div class="info-block">
-          <div class="ib-label">Payment handles</div>
-          <div class="contact-links">
-            <div class="clink"><span>💸 &nbsp;Venmo: coming soon</span></div>
-            <div class="clink"><span>🅿️ &nbsp;PayPal: coming soon</span></div>
-            <div class="clink"><span>📷 &nbsp;Instagram: coming soon</span></div>
+
+        <div class="form-right">
+          <div class="panel-title">Delivery Info</div>
+          <div class="info-block">
+            <div class="ib-label">My delivery hours</div>
+            <div class="ib-row"><span>Mon / Wed / Fri</span><span>11am – 11:30pm</span></div>
+            <div class="ib-row"><span>Tue / Thu</span><span>5:30pm – 11:30pm</span></div>
+            <div class="ib-row"><span>Sat / Sun</span><span>12pm – 11pm</span></div>
+          </div>
+          <div class="info-block">
+            <div class="ib-label">Delivery Fee</div>
+            <div class="fee-note"><p>A small delivery fee applies per order. Have <strong>$5 ready</strong> for the runner.</p></div>
+          </div>
+          <div class="info-block">
+            <div class="ib-label">Coverage</div>
+            <div class="ib-row"><span>All W&J dorms</span><span>✓</span></div>
+            <div class="ib-row"><span>Academic buildings</span><span>✓</span></div>
+            <div class="ib-row"><span>Frats &amp; sororities</span><span>✓</span></div>
+            <div class="ib-row"><span>Off campus</span><span>✗</span></div>
+          </div>
+          <div class="info-block">
+            <div class="ib-label">Payment handles</div>
+            <div class="contact-links">
+              <div class="clink"><span>💸 &nbsp;Venmo: coming soon</span></div>
+              <div class="clink"><span>🅿️ &nbsp;PayPal: coming soon</span></div>
+              <div class="clink"><span>📷 &nbsp;Instagram: coming soon</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -325,84 +368,171 @@
   <footer>
     <div class="logo">G<span>&</span>T's Delivery</div>
     <p>Washington & Jefferson College · Not affiliated with official W&J Dining Services</p>
-    <a href="dashboard.html" style="font-size:11px;color:rgba(255,255,255,0.08);text-decoration:none;">admin</a>
   </footer>
 
   <script>
-    // ─────────────────────────────────────────────
-    // 🔧 STEP 1: Paste your SheetDB API URL here
-    //    (you'll get this after setting up SheetDB)
-    // ─────────────────────────────────────────────
-    const SHEETDB_URL = 'https://sheetdb.io/api/v1/jjmci5czl8hn3';
+  const SCHEDULE = {
+    0: [12*60,      23*60],      // Sun  12:00pm – 11:00pm
+    1: [11*60,      23*60+30],   // Mon  11:00am – 11:30pm
+    2: [17*60+30,   23*60+30],   // Tue   5:30pm – 11:30pm
+    3: [11*60,      23*60+30],   // Wed  11:00am – 11:30pm
+    4: [17*60+30,   23*60+30],   // Thu   5:30pm – 11:30pm
+    5: [11*60,      23*60+30],   // Fri  11:00am – 11:30pm
+    6: [12*60,      23*60],      // Sat  12:00pm – 11:00pm
+  };
 
-    function updateLocation(){
-      const type=document.getElementById('loc-type').value;
-      const ids=['sel-dorm','sel-academic','sel-greek','sel-other'];
-      ids.forEach(id=>document.getElementById(id).classList.add('hidden'));
-      if(type==='dorm') document.getElementById('sel-dorm').classList.remove('hidden');
-      else if(type==='academic') document.getElementById('sel-academic').classList.remove('hidden');
-      else if(type==='greek') document.getElementById('sel-greek').classList.remove('hidden');
-      else if(type==='other') document.getElementById('sel-other').classList.remove('hidden');
-    }
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-    function selectPay(el,method){
-      document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('pay-input').value=method;
-    }
+  function getETNow() {
+    return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  }
 
-    // Build a readable location string from form fields
-    function getLocation() {
-      const type = document.getElementById('loc-type').value;
-      const room = document.getElementById('room-input').value;
-      let loc = '';
-      if(type==='dorm') loc = document.querySelector('[name=dorm]').value;
-      else if(type==='academic') loc = document.querySelector('[name=academic_building]').value;
-      else if(type==='greek') loc = document.querySelector('[name=greek_house]').value;
-      else if(type==='other') loc = document.querySelector('[name=other_location]').value;
-      return room ? `${loc} — Room ${room}` : loc;
-    }
+  function isOpenNow() {
+    const now = getETNow();
+    const mins = now.getHours() * 60 + now.getMinutes();
+    const s = SCHEDULE[now.getDay()];
+    return s ? mins >= s[0] && mins < s[1] : false;
+  }
 
-    document.getElementById('delivery-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-
-      const fd = new FormData(this);
-      const now = new Date();
-
-      const data = {
-        date: now.toISOString(),
-        order_id: '#GT-' + Math.floor(1000 + Math.random() * 9000),
-        first_name: fd.get('first_name'),
-        last_name: fd.get('last_name'),
-        phone: fd.get('phone'),
-        location: getLocation(),
-        order_number: fd.get('order_number'),
-        payment_method: fd.get('payment_method'),
-        notes: fd.get('notes') || '',
-        fee: 5
-      };
-
-      try {
-        await fetch(SHEETDB_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data })
-        });
-        document.getElementById('success-msg').classList.add('show');
-        this.reset();
-        document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('active'));
-        document.querySelector('.pay-opt').classList.add('active');
-        document.getElementById('pay-input').value = 'Venmo';
-      } catch(err) {
-        alert('Something went wrong. Please try again.');
+  function getNextOpen() {
+    const now = getETNow();
+    const day = now.getDay();
+    const mins = now.getHours() * 60 + now.getMinutes();
+    for (let i = 0; i <= 7; i++) {
+      const d = (day + i) % 7;
+      const s = SCHEDULE[d];
+      if (!s) continue;
+      if (i === 0 && mins >= s[1]) continue;
+      if (i === 0 && mins < s[0]) {
+        const h = Math.floor(s[0] / 60) % 12 || 12;
+        const m = s[0] % 60;
+        const ap = s[0] >= 720 ? 'PM' : 'AM';
+        return 'today at ' + h + (m ? ':' + String(m).padStart(2,'0') : '') + ' ' + ap;
       }
+      if (i > 0) {
+        const h = Math.floor(s[0] / 60) % 12 || 12;
+        const m = s[0] % 60;
+        const ap = s[0] >= 720 ? 'PM' : 'AM';
+        const lbl = i === 1 ? 'tomorrow' : DAY_NAMES[d];
+        return lbl + ' at ' + h + (m ? ':' + String(m).padStart(2,'0') : '') + ' ' + ap;
+      }
+    }
+    return '';
+  }
 
-      btn.disabled = false;
-      btn.textContent = 'Request My Delivery →';
+  function updateBadge() {
+    const pill = document.getElementById('nav-pill');
+    const text = document.getElementById('nav-text');
+    const overlay = document.getElementById('closed-overlay');
+    const overlayNext = document.getElementById('overlay-next');
+    const open = isOpenNow();
+
+    if (open) {
+      pill.className = 'nav-pill open';
+      text.innerHTML = 'Delivery <strong>available now</strong>';
+      overlay.classList.remove('visible');
+    } else {
+      pill.className = 'nav-pill closed';
+      const next = getNextOpen();
+      text.innerHTML = next ? 'Opens <strong>' + next + '</strong>' : 'Delivery <strong>closed</strong>';
+      overlay.classList.add('visible');
+      overlayNext.innerHTML = next ? 'We open <strong>' + next + '</strong>' : '';
+    }
+  }
+
+  updateBadge();
+  setInterval(updateBadge, 60000);
+
+  function switchContact(type) {
+    var emailDiv = document.getElementById('contact-email');
+    var phoneDiv = document.getElementById('contact-phone');
+    var emailInput = document.getElementById('input-email');
+    var phoneInput = document.getElementById('input-phone');
+    var btns = document.querySelectorAll('.ct-btn');
+    if (type === 'email') {
+      emailDiv.classList.remove('hidden'); phoneDiv.classList.add('hidden');
+      emailInput.required = true; emailInput.disabled = false;
+      phoneInput.required = false; phoneInput.disabled = true;
+      btns[0].classList.add('active'); btns[1].classList.remove('active');
+    } else {
+      phoneDiv.classList.remove('hidden'); emailDiv.classList.add('hidden');
+      phoneInput.required = true; phoneInput.disabled = false;
+      emailInput.required = false; emailInput.disabled = true;
+      btns[1].classList.add('active'); btns[0].classList.remove('active');
+    }
+  }
+
+  function updateLocation() {
+    var type = document.getElementById('loc-type').value;
+    var ids = ['sel-dorm','sel-academic','sel-greek','sel-other'];
+    ids.forEach(function(id) { document.getElementById(id).classList.add('hidden'); });
+    if (type === 'dorm') document.getElementById('sel-dorm').classList.remove('hidden');
+    else if (type === 'academic') document.getElementById('sel-academic').classList.remove('hidden');
+    else if (type === 'greek') document.getElementById('sel-greek').classList.remove('hidden');
+    else if (type === 'other') document.getElementById('sel-other').classList.remove('hidden');
+  }
+
+  function selectPay(el, method) {
+    document.querySelectorAll('.pay-opt').forEach(function(o) { o.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('pay-input').value = method;
+  }
+
+  const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484220220141998113/jUqrHMPmFPm07MoLrc4MaqZH4D7WMcocpHhrLVieL9pGV019Gjo_zoaoqn95K5UB-yIo';
+
+  document.getElementById('order-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const data = new FormData(this);
+    const building = data.get('dorm') || data.get('academic_building') || data.get('greek_house') || data.get('other_location') || data.get('location_type') || '—';
+    const emailInput = document.getElementById('input-email');
+    const contactLabel = emailInput.disabled ? '📱 Phone' : '📧 Email';
+    const contactValue = emailInput.disabled ? (data.get('phone') || '—') : (data.get('email') || '—');
+
+    const now = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' });
+
+    const formspreePromise = fetch('https://formspree.io/f/mwvryqar', {
+      method: 'POST', body: data, headers: { 'Accept': 'application/json' }
     });
+
+    const discordPromise = fetch(DISCORD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: '🛵 **NEW DELIVERY ORDER!**',
+        embeds: [{
+          color: 0xC0392B,
+          title: 'Order from ' + data.get('first_name') + ' ' + data.get('last_name'),
+          fields: [
+            { name: '📦 G&T\'s Order #', value: data.get('order_number') || '—', inline: true },
+            { name: '💳 Payment', value: data.get('payment_method') || '—', inline: true },
+            { name: '📍 Deliver To', value: building, inline: false },
+            { name: contactLabel, value: contactValue, inline: true },
+            { name: '📝 Notes', value: data.get('notes') || 'None', inline: false },
+          ],
+          footer: { text: 'Submitted at ' + now }
+        }]
+      })
+    });
+
+    try {
+      await Promise.all([formspreePromise, discordPromise]);
+      btn.textContent = '✅ Order Received!';
+      btn.style.background = '#27ae60';
+      this.reset();
+      switchContact('email');
+      document.querySelectorAll('.pay-opt').forEach(function(o) { o.classList.remove('active'); });
+      document.querySelector('.pay-opt').classList.add('active');
+      document.getElementById('pay-input').value = 'Venmo';
+    } catch(err) {
+      btn.textContent = 'Something went wrong — try again';
+      btn.style.background = '#e74c3c';
+      btn.disabled = false;
+    }
+  });
   </script>
 </body>
 </html>
