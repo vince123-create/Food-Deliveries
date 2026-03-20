@@ -3,6 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -10,27 +18,39 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-const SCHEDULE_FILE = '/app/data/schedule.json';
+const DATA_DIR = '/app/data';
+const SCHEDULE_FILE = path.join(DATA_DIR, 'schedule.json');
 
 function loadSchedule() {
-  if (!fs.existsSync(SCHEDULE_FILE)) {
-    const def = [
-      { day: 'Sun', open: false, start: '09:00', end: '17:00' },
-      { day: 'Mon', open: true,  start: '08:00', end: '18:00' },
-      { day: 'Tue', open: true,  start: '08:00', end: '18:00' },
-      { day: 'Wed', open: true,  start: '08:00', end: '18:00' },
-      { day: 'Thu', open: true,  start: '08:00', end: '18:00' },
-      { day: 'Fri', open: true,  start: '08:00', end: '18:00' },
-      { day: 'Sat', open: false, start: '09:00', end: '14:00' },
-    ];
-    fs.writeFileSync(SCHEDULE_FILE, JSON.stringify(def, null, 2));
-    return def;
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(SCHEDULE_FILE)) {
+      const def = [
+        { day: 'Sun', open: true,  start: '12:00', end: '23:00' },
+        { day: 'Mon', open: true,  start: '11:00', end: '23:30' },
+        { day: 'Tue', open: true,  start: '17:30', end: '23:30' },
+        { day: 'Wed', open: true,  start: '11:00', end: '23:30' },
+        { day: 'Thu', open: true,  start: '17:30', end: '23:30' },
+        { day: 'Fri', open: true,  start: '11:00', end: '23:30' },
+        { day: 'Sat', open: true,  start: '12:00', end: '23:00' },
+      ];
+      fs.writeFileSync(SCHEDULE_FILE, JSON.stringify(def, null, 2));
+      return def;
+    }
+    return JSON.parse(fs.readFileSync(SCHEDULE_FILE));
+  } catch(e) {
+    console.error('Error loading schedule:', e);
+    return [];
   }
-  return JSON.parse(fs.readFileSync(SCHEDULE_FILE));
 }
 
 function saveSchedule(schedule) {
-  fs.writeFileSync(SCHEDULE_FILE, JSON.stringify(schedule, null, 2));
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(SCHEDULE_FILE, JSON.stringify(schedule, null, 2));
+  } catch(e) {
+    console.error('Error saving schedule:', e);
+  }
 }
 
 function toMins(t) {
@@ -43,7 +63,7 @@ function isOpenNow(schedule) {
   const day = now.getDay();
   const mins = now.getHours() * 60 + now.getMinutes();
   const s = schedule[day];
-  return s.open && mins >= toMins(s.start) && mins < toMins(s.end);
+  return s && s.open && mins >= toMins(s.start) && mins < toMins(s.end);
 }
 
 app.get('/api/schedule', (req, res) => {
@@ -57,8 +77,10 @@ app.post('/api/schedule', (req, res) => {
   }
   const schedule = req.body;
   saveSchedule(schedule);
-  const { notifyDiscord } = require('./bot');
-  notifyDiscord(isOpenNow(schedule), schedule);
+  try {
+    const { notifyDiscord } = require('./bot');
+    notifyDiscord(isOpenNow(schedule), schedule);
+  } catch(e) {}
   res.json({ ok: true });
 });
 
@@ -66,23 +88,20 @@ app.get('/api/status', (req, res) => {
   const schedule = loadSchedule();
   const now = new Date();
   const day = now.getDay();
-  const mins = now.getHours() * 60 + now.getMinutes();
-  const today = schedule[day];
   const open = isOpenNow(schedule);
-
+  const today = schedule[day];
   let nextEvent = null;
   if (open) {
     nextEvent = { type: 'close', time: today.end };
   } else {
     for (let i = 1; i <= 7; i++) {
       const di = (day + i) % 7;
-      if (schedule[di].open) {
+      if (schedule[di] && schedule[di].open) {
         nextEvent = { type: 'open', day: schedule[di].day, time: schedule[di].start, daysAway: i };
         break;
       }
     }
   }
-
   res.json({ open, schedule, nextEvent });
 });
 
