@@ -110,6 +110,17 @@
     footer{background:#0a0a0a;padding:22px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
     footer .logo{font-size:18px;}
     footer p{font-size:12px;color:rgba(255,255,255,0.25);}
+
+    /* TOOLTIP */
+    .label-row{display:flex;align-items:center;gap:6px;}
+    .tooltip-wrap{position:relative;display:inline-flex;}
+    .tooltip-btn{width:16px;height:16px;border-radius:50%;background:#e0dbd6;border:none;cursor:pointer;font-size:10px;font-weight:700;color:#888;display:flex;align-items:center;justify-content:center;line-height:1;transition:background 0.2s,color 0.2s;flex-shrink:0;padding:0;}
+    .tooltip-btn:hover{background:var(--red);color:#fff;}
+    .tooltip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1a1a;color:#f0ebe8;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:10px;width:230px;text-align:left;box-shadow:0 4px 20px rgba(0,0,0,0.3);pointer-events:none;opacity:0;transition:opacity 0.18s;z-index:50;letter-spacing:0;}
+    .tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1a1a1a;}
+    .tooltip-wrap:hover .tooltip-box,.tooltip-wrap.open .tooltip-box{opacity:1;}
+
+    /* MODAL */
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
     .modal-backdrop.show{opacity:1;pointer-events:all;}
     .modal{background:#111;border:1px solid #2a2020;border-radius:20px;width:100%;max-width:720px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(24px) scale(0.97);transition:transform 0.35s cubic-bezier(.34,1.56,.64,1);}
@@ -154,7 +165,6 @@
     .sauce-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.2s;pointer-events:none;}
     .sauce-card.selected .sauce-check{opacity:1;transform:scale(1);}
     .sauce-check svg{width:10px;height:10px;stroke:#fff;stroke-width:2.5;}
-    /* DRINK PICKER */
     .drink-picker{background:#0f0f14;border-radius:16px;overflow:hidden;border:1px solid #1e1e2e;}
     .drink-grid-wrap{padding:20px 18px 14px;}
     .drink-grid-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3a3a4a;margin-bottom:14px;}
@@ -210,6 +220,8 @@
       .modal-header,.modal-footer{padding:16px 20px;}
       .drink-grid{grid-template-columns:repeat(4,1fr);}
       .drink-ring{width:60px;height:60px;}
+      .tooltip-box{left:0;transform:none;}
+      .tooltip-box::after{left:12px;transform:none;}
     }
   </style>
 </head>
@@ -315,7 +327,19 @@
                 </select>
               </div>
             </div>
-            <div class="fg"><label>G&T's Order Number</label><input type="text" name="order_number" placeholder="e.g. #123456789" required /></div>
+            <div class="fg">
+              <div class="label-row">
+                <label style="margin:0">G&T's Order Number</label>
+                <div class="tooltip-wrap" id="order-tooltip">
+                  <button type="button" class="tooltip-btn" onclick="document.getElementById('order-tooltip').classList.toggle('open')">?</button>
+                  <div class="tooltip-box">
+                    Check your confirmation email from G&T's. Your order number is on the first line — it starts with <strong style="color:#f0ebe8">#</strong> followed by <strong style="color:#f0ebe8">9 digits</strong>.<br><br>
+                    Example: <span style="color:#E74C3C;font-weight:600">#123456789</span>
+                  </div>
+                </div>
+              </div>
+              <input type="text" name="order_number" placeholder="e.g. #123456789" required />
+            </div>
             <div class="fg">
               <label>Payment Method</label>
               <div class="pay-opts">
@@ -395,6 +419,7 @@
   function getNextOpen(){const n=getETNow(),day=n.getDay(),mins=n.getHours()*60+n.getMinutes();for(let i=0;i<=7;i++){const d=(day+i)%7,s=SCHEDULE[d];if(!s)continue;if(i===0&&mins>=s[1])continue;if(i===0&&mins<s[0]){const h=Math.floor(s[0]/60)%12||12,m=s[0]%60,ap=s[0]>=720?'PM':'AM';return'today at '+h+(m?':'+String(m).padStart(2,'0'):'')+' '+ap;}if(i>0){const h=Math.floor(s[0]/60)%12||12,m=s[0]%60,ap=s[0]>=720?'PM':'AM',lbl=i===1?'tomorrow':DAY_NAMES[d];return lbl+' at '+h+(m?':'+String(m).padStart(2,'0'):'')+' '+ap;}}return'';}
   function updateBadge(){const pill=document.getElementById('nav-pill'),text=document.getElementById('nav-text'),overlay=document.getElementById('closed-overlay'),on=document.getElementById('overlay-next'),open=isOpenNow();if(open){pill.className='nav-pill open';text.innerHTML='Delivery <strong>available now</strong>';overlay.classList.remove('visible');}else{pill.className='nav-pill closed';const next=getNextOpen();text.innerHTML=next?'Opens <strong>'+next+'</strong>':'Delivery <strong>closed</strong>';overlay.classList.add('visible');on.innerHTML=next?'We open <strong>'+next+'</strong>':'';}  }
   updateBadge();setInterval(updateBadge,60000);
+  document.addEventListener('click',function(e){const t=document.getElementById('order-tooltip');if(t&&!t.contains(e.target))t.classList.remove('open');});
   function switchContact(type){var ed=document.getElementById('contact-email'),pd=document.getElementById('contact-phone'),ei=document.getElementById('input-email'),pi=document.getElementById('input-phone'),btns=document.querySelectorAll('.ct-btn');if(type==='email'){ed.classList.remove('hidden');pd.classList.add('hidden');ei.required=true;ei.disabled=false;pi.required=false;pi.disabled=true;btns[0].classList.add('active');btns[1].classList.remove('active');}else{pd.classList.remove('hidden');ed.classList.add('hidden');pi.required=true;pi.disabled=false;ei.required=false;ei.disabled=true;btns[1].classList.add('active');btns[0].classList.remove('active');}}
   function updateLocation(){var type=document.getElementById('loc-type').value,ids=['sel-dorm','sel-academic','sel-greek','sel-other'];ids.forEach(function(id){document.getElementById(id).classList.add('hidden');});if(type==='dorm')document.getElementById('sel-dorm').classList.remove('hidden');else if(type==='academic')document.getElementById('sel-academic').classList.remove('hidden');else if(type==='greek')document.getElementById('sel-greek').classList.remove('hidden');else if(type==='other')document.getElementById('sel-other').classList.remove('hidden');}
   function selectPay(el,method){document.querySelectorAll('.pay-opt').forEach(function(o){o.classList.remove('active');});el.classList.add('active');document.getElementById('pay-input').value=method;}
@@ -720,7 +745,6 @@
     renderBrandGrid();
     updateDrinkBar();
   }
-
   function renderBrandGrid(){
     const grid=document.getElementById('brand-grid');
     if(!grid)return;
@@ -730,27 +754,20 @@
       const isActive=activeDrinkBrand&&activeDrinkBrand.id===brand.id;
       const hasSelection=drinkSelection&&brand.flavors.some(function(f){return f.id===drinkSelection.id;});
       item.className='drink-item'+(isActive?' selected':'');
-      item.innerHTML=
-        '<div class="drink-ring" style="'+(hasSelection?'border-color:#E74C3C;box-shadow:0 0 0 3px rgba(231,76,60,0.2)':'')+'">'+
-          '<img src="'+brand.img+'" alt="'+brand.name+'" loading="lazy"/>'+
-        '</div>'+
-        '<div class="drink-lbl">'+brand.name+'</div>';
+      item.innerHTML='<div class="drink-ring" style="'+(hasSelection?'border-color:#E74C3C;box-shadow:0 0 0 3px rgba(231,76,60,0.2)':'')+'"><img src="'+brand.img+'" alt="'+brand.name+'" loading="lazy"/></div><div class="drink-lbl">'+brand.name+'</div>';
       item.addEventListener('click',function(){selectBrandDrill(brand);});
       grid.appendChild(item);
     });
   }
-
   function selectBrandDrill(brand){
     activeDrinkBrand=brand;
     renderBrandGrid();
     document.getElementById('fv-brand-img').src=brand.img;
     document.getElementById('fv-brand-name').textContent=brand.name;
     document.getElementById('fv-flavor-count').textContent=brand.flavors.length+' flavor'+(brand.flavors.length>1?'s':'');
-    const flavorSection=document.getElementById('flavor-section');
-    flavorSection.style.display='block';
+    document.getElementById('flavor-section').style.display='block';
     renderFlavorGrid(brand);
   }
-
   function renderFlavorGrid(brand){
     const grid=document.getElementById('flavor-grid');
     if(!grid)return;
@@ -759,42 +776,21 @@
       const item=document.createElement('div');
       const isSel=drinkSelection&&drinkSelection.id===flavor.id;
       item.className='drink-item'+(isSel?' selected':'');
-      item.innerHTML=
-        '<div class="drink-ring">'+
-          '<img src="'+flavor.img+'" alt="'+flavor.name+'" loading="lazy"/>'+
-        '</div>'+
-        '<div class="drink-lbl">'+flavor.name+'</div>';
+      item.innerHTML='<div class="drink-ring"><img src="'+flavor.img+'" alt="'+flavor.name+'" loading="lazy"/></div><div class="drink-lbl">'+flavor.name+'</div>';
       item.addEventListener('click',function(){pickFlavor(flavor,brand);});
       grid.appendChild(item);
     });
   }
-
   function pickFlavor(flavor,brand){
-    if(drinkSelection&&drinkSelection.id===flavor.id){
-      drinkSelection=null;
-    } else {
-      drinkSelection=Object.assign({},flavor,{brandName:brand.name,brandImg:brand.img});
-      noDrink=false;
-      const nd=document.getElementById('no-drink-btn');
-      if(nd){nd.className='no-drink-btn';nd.textContent='No drink for me';}
-    }
-    renderBrandGrid();
-    renderFlavorGrid(brand);
-    updateDrinkBar();
-    const ir=document.getElementById('ice-row');
-    if(ir)ir.style.display=drinkSelection?'flex':'none';
+    if(drinkSelection&&drinkSelection.id===flavor.id){drinkSelection=null;}
+    else{drinkSelection=Object.assign({},flavor,{brandName:brand.name,brandImg:brand.img});noDrink=false;const nd=document.getElementById('no-drink-btn');if(nd){nd.className='no-drink-btn';nd.textContent='No drink for me';}}
+    renderBrandGrid();renderFlavorGrid(brand);updateDrinkBar();
+    const ir=document.getElementById('ice-row');if(ir)ir.style.display=drinkSelection?'flex':'none';
   }
-
   function updateDrinkBar(){
     const bar=document.getElementById('drink-sel-bar');if(!bar)return;
-    if(drinkSelection){
-      bar.className='drink-selected-bar show';
-      document.getElementById('dsb-img').src=drinkSelection.img;
-      document.getElementById('dsb-img').alt=drinkSelection.name;
-      document.getElementById('dsb-name').textContent=(drinkSelection.brandName?drinkSelection.brandName+' · ':'')+drinkSelection.name;
-    } else {
-      bar.className='drink-selected-bar';
-    }
+    if(drinkSelection){bar.className='drink-selected-bar show';document.getElementById('dsb-img').src=drinkSelection.img;document.getElementById('dsb-img').alt=drinkSelection.name;document.getElementById('dsb-name').textContent=(drinkSelection.brandName?drinkSelection.brandName+' · ':'')+drinkSelection.name;}
+    else{bar.className='drink-selected-bar';}
   }
   function clearDrink(){drinkSelection=null;renderBrandGrid();if(activeDrinkBrand)renderFlavorGrid(activeDrinkBrand);updateDrinkBar();const ir=document.getElementById('ice-row');if(ir)ir.style.display='none';}
   function toggleNoDrink(){noDrink=!noDrink;if(noDrink){drinkSelection=null;clearDrink();}const nd=document.getElementById('no-drink-btn');if(nd){nd.className='no-drink-btn'+(noDrink?' active':'');nd.textContent=noDrink?'✓ No drink — confirmed':'No drink for me';}const ir=document.getElementById('ice-row');if(ir)ir.style.display='none';}
