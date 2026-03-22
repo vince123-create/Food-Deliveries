@@ -763,6 +763,12 @@
     });
   }
   function selectBrandDrill(brand){
+    if(brand.flavors.length===1){
+      pickFlavor(brand.flavors[0],brand);
+      activeDrinkBrand=brand;
+      renderBrandGrid();
+      return;
+    }
     activeDrinkBrand=brand;
     renderBrandGrid();
     document.getElementById('fv-brand-img').src=brand.img;
